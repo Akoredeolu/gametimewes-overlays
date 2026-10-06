@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gametimewes · Twitch Panels</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="../ds/styles.css">
+<link rel="stylesheet" href="../dashboard/dashboard.css">
+<style>
+  .wall { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; }
+  .item { display: flex; flex-direction: column; gap: 10px; }
+  .item a { color: var(--color-accent-400); font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+  [data-panel] { color: var(--color-bg); font-family: "Archivo", system-ui, sans-serif; }
+  body.export { background: transparent; } body.export header, body.export .hero, body.export .item a { display: none; }
+  body.export main { padding: 0; } body.export .wall { gap: 0; }
+</style>
+</head>
+<body>
+<header class="top"><div class="stripe"></div><div class="bar"><div class="brand"><b>GAMETIMEWES</b><span>Twitch profile panels</span></div><div class="who"><a class="btn-sm" href="../">← Overlay pack</a></div></div></header>
+<main>
+  <div class="hero" style="margin-bottom:24px"><p class="hint" style="max-width:720px">Six "About" panels for twitch.tv/gametimewes. Download each PNG and add it on Twitch: <b>Creator Dashboard → Settings → Channel → About → Edit panels → +</b> → Add a Text or Image Panel → upload the image (and set the link, e.g. your Discord invite on the Discord panel). PNGs are exported at 2× (640 px wide) so they stay sharp; Twitch shows them at 320 px.</p></div>
+  <div class="wall" id="wall">
+<div data-panel="about" style="width:320px;background:var(--color-text);display:flex;flex-direction:column;">
+<div style="height:14px;background:repeating-linear-gradient(90deg,var(--color-accent) 0 20px,#0d0c0c 20px 40px);"></div>
+<div style="padding:16px 16px 12px;font-size:28px;font-weight:800;letter-spacing:-.02em;text-transform:uppercase;border-bottom:2px solid var(--color-neutral-800);">About me</div>
+<div style="padding:16px;font-size:15px;line-height:1.55;color:var(--color-neutral-200);text-wrap:pretty;">Hey, I'm Wes 👋 Nigerian-American software engineer by day, streamer by night. AC Milan watchalongs, EA FC Pro Clubs with the boys, and MSFS 2024 flights on VATSIM, including the weekly TBM Tour of America ✈️ Banter, football takes and good vibes. Forza Milan 🔴⚫</div>
+</div>
+
+<div data-panel="socials" style="width:320px;background:var(--color-text);display:flex;flex-direction:column;">
+<div style="height:14px;background:repeating-linear-gradient(90deg,var(--color-accent) 0 20px,#0d0c0c 20px 40px);"></div>
+<div style="padding:16px 16px 12px;font-size:28px;font-weight:800;letter-spacing:-.02em;text-transform:uppercase;border-bottom:2px solid var(--color-neutral-800);">Socials</div>
+<div style="display:flex;flex-direction:column;padding:8px 16px 12px;gap:8px;">
+<div style="display:flex;flex-direction:column;padding:8px 0;border-bottom:2px solid var(--color-neutral-800);"><div style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-400);">TikTok</div><div style="font-size:20px;font-weight:800;">@gametimewes</div></div>
+<div style="display:flex;flex-direction:column;padding:8px 0;border-bottom:2px solid var(--color-neutral-800);"><div style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-400);">Instagram</div><div style="font-size:20px;font-weight:800;">@gametimewes</div></div>
+<div style="display:flex;flex-direction:column;padding:8px 0;"><div style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-400);">YouTube</div><div style="font-size:20px;font-weight:800;">@gametimewes</div></div>
+</div>
+</div>
+
+<div data-panel="categories" style="width:320px;background:var(--color-text);display:flex;flex-direction:column;">
+<div style="height:14px;background:repeating-linear-gradient(90deg,var(--color-accent) 0 20px,#0d0c0c 20px 40px);"></div>
+<div style="padding:16px 16px 12px;font-size:28px;font-weight:800;letter-spacing:-.02em;text-transform:uppercase;border-bottom:2px solid var(--color-neutral-800);">Categories</div>
+<div style="display:flex;flex-direction:column;padding:12px 16px 16px;gap:8px;">
+<div style="background:var(--color-accent);color:#fff;padding:10px 12px;font-size:17px;font-weight:800;">MSFS 2024</div>
+<div style="background:#0d0c0c;padding:10px 12px;font-size:17px;font-weight:800;">Football Watchalongs</div>
+<div style="background:var(--color-accent);color:#fff;padding:10px 12px;font-size:17px;font-weight:800;">EAFC</div>
+<div style="background:#0d0c0c;padding:10px 12px;font-size:17px;font-weight:800;">Football Manager</div>
+<div style="background:var(--color-accent);color:#fff;padding:10px 12px;font-size:17px;font-weight:800;">Reactions</div>
+</div>
+</div>
+
+<div data-panel="rules" style="width:320px;background:var(--color-text);display:flex;flex-direction:column;">
+<div style="height:14px;background:repeating-linear-gradient(90deg,var(--color-accent) 0 20px,#0d0c0c 20px 40px);"></div>
+<div style="padding:16px 16px 12px;font-size:28px;font-weight:800;letter-spacing:-.02em;text-transform:uppercase;border-bottom:2px solid var(--color-neutral-800);">Chat rules</div>
+<div style="display:flex;flex-direction:column;padding:4px 16px 8px;color:var(--color-neutral-200);">
+<div style="display:flex;gap:12px;padding:10px 0;font-size:15px;line-height:1.4;border-bottom:2px solid var(--color-neutral-800);"><div style="font-weight:800;color:var(--color-accent-400);">01</div><div>Banter is welcome. Hate isn't.</div></div>
+<div style="display:flex;gap:12px;padding:10px 0;font-size:15px;line-height:1.4;border-bottom:2px solid var(--color-neutral-800);"><div style="font-weight:800;color:var(--color-accent-400);">02</div><div>No spam or self-promo.</div></div>
+<div style="display:flex;gap:12px;padding:10px 0;font-size:15px;line-height:1.4;border-bottom:2px solid var(--color-neutral-800);"><div style="font-weight:800;color:var(--color-accent-400);">03</div><div>No score spoilers during watchalongs.</div></div>
+<div style="display:flex;gap:12px;padding:10px 0;font-size:15px;line-height:1.4;"><div style="font-weight:800;color:var(--color-accent-400);">04</div><div>Mods have the final word.</div></div>
+</div>
+</div>
+
+<div data-panel="setup" style="width:320px;background:var(--color-text);display:flex;flex-direction:column;">
+<div style="height:14px;background:repeating-linear-gradient(90deg,var(--color-accent) 0 20px,#0d0c0c 20px 40px);"></div>
+<div style="padding:16px 16px 12px;font-size:28px;font-weight:800;letter-spacing:-.02em;text-transform:uppercase;border-bottom:2px solid var(--color-neutral-800);">Setup</div>
+<div style="display:grid;grid-template-columns:96px 1fr;padding:0 16px 4px;font-size:15px;color:var(--color-neutral-200);">
+<div style="padding:11px 0;border-bottom:2px solid var(--color-neutral-800);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-400);">CPU</div><div style="padding:11px 0;border-bottom:2px solid var(--color-neutral-800);">Add yours</div>
+<div style="padding:11px 0;border-bottom:2px solid var(--color-neutral-800);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-400);">GPU</div><div style="padding:11px 0;border-bottom:2px solid var(--color-neutral-800);">Add yours</div>
+<div style="padding:11px 0;border-bottom:2px solid var(--color-neutral-800);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-400);">Yoke</div><div style="padding:11px 0;border-bottom:2px solid var(--color-neutral-800);">Add yours</div>
+<div style="padding:11px 0;border-bottom:2px solid var(--color-neutral-800);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-400);">Camera</div><div style="padding:11px 0;border-bottom:2px solid var(--color-neutral-800);">Add yours</div>
+<div style="padding:11px 0;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-400);">Mic</div><div style="padding:11px 0;">Fifine AM8</div>
+</div>
+</div>
+
+<div data-panel="discord" style="width:320px;display:flex;flex-direction:column;background:repeating-linear-gradient(90deg,var(--color-accent) 0 40px,#0d0c0c 40px 80px);padding:16px;">
+<div style="background:var(--color-text);padding:16px;display:flex;flex-direction:column;gap:16px;">
+<div style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-400);">Community</div>
+<div style="font-size:40px;font-weight:800;line-height:.95;letter-spacing:-.03em;text-transform:uppercase;">Join the Discord</div>
+<div style="background:var(--color-accent);color:#fff;padding:10px 12px;font-size:15px;font-weight:600;">discord.gg/your-invite →</div>
+</div>
+</div>
+
+  </div>
+</main>
+<script>
+  // wrap each panel with its download link (PNG files live in panels/png/)
+  document.querySelectorAll('[data-panel]').forEach(p => {
+    const w = document.createElement('div'); w.className = 'item';
+    p.replaceWith(w); w.appendChild(p);
+    const a = document.createElement('a'); a.href = `png/${p.dataset.panel}.png`; a.download = `gametimewes-panel-${p.dataset.panel}.png`; a.textContent = `Download ${p.dataset.panel}.png ↓`;
+    w.appendChild(a);
+  });
+  if (new URLSearchParams(location.search).get('export') === '1') document.body.classList.add('export');
+</script>
+</body>
+</html>

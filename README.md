@@ -9,6 +9,7 @@ overlays/scenes.html    every full-screen scene: ?scene=<id>[&layout=vertical]
 overlays/alerts.html    follow / sub / resub / gift / cheer / raid / redeem / GOAL alerts
 overlays/chat.html      branded Twitch chat box
 overlays/watchalong.html API-Football scorebug + lineups + events + bet slips (+ ?cams=1 for 2-cam)
+panels/                 Twitch profile panels (page + ready-to-upload PNGs in panels/png/)
 auth/                   one-click Twitch connection for real alerts
 bridge/                 MSFS SimConnect → live telemetry (run on the sim PC)
 lib/                    shared modules (config, state, chat, EventSub, sim)
