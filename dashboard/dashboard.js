@@ -226,9 +226,12 @@ $('#pollClose').onclick = () => save('poll/open', false);
 
 // ---------- test alerts ----------
 const TESTS = { follow: 'Follow', sub: 'Sub', resub: 'Resub', gift: 'Gift subs', cheer: 'Cheer', raid: 'Raid', redeem: 'Redeem' };
+$('#hearHere').checked = ls.get('gtw_hear') !== '0';
+$('#hearHere').onchange = e => ls.set('gtw_hear', e.target.checked ? '1' : '0');
 $('#testBtns').innerHTML = Object.entries(TESTS).map(([k, v]) => `<button data-t="${k}">${v}</button>`).join('');
 $$('#testBtns button').forEach(b => b.onclick = () => {
   const t = b.dataset.t, amt = Number($('#tAmt').value) || 1;
+  if ($('#hearHere').checked && S.audio?.enabled !== false) playAlertSound(t, { volume: Number(S.audio?.volume ?? 0.6), src: S.audio?.sounds?.[t] || '', amount: t === 'cheer' ? amt * 100 : amt });
   emit('alert', { type: t, name: $('#tName').value || 'Tester', amount: t === 'cheer' ? amt * 100 : t === 'raid' ? amt * 10 : amt, message: t === 'redeem' ? 'Hydrate!' : t === 'resub' ? 'Forza Milan!' : '' }).then(() => toast(`Test ${TESTS[t]} sent`));
 });
 

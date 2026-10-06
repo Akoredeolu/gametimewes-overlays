@@ -18,18 +18,20 @@
   .a-m { font-size: 22px; font-weight: 600; color: var(--color-neutral-300); margin-top: 6px; }
   #status { position: fixed; left: 8px; bottom: 8px; font: 600 12px Archivo, sans-serif; color: #bab6b6; background: #0d0c0c; padding: 4px 8px; }
   body:not(.preview) #status.ok { display: none; }
+  #unlock { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 50; cursor: pointer; border: 0; background: var(--color-accent); color: #fff; font: 800 18px Archivo, sans-serif; padding: 14px 22px; text-align: left; }
 </style>
 </head>
 <body>
 <div id="scaler"><div id="stage"><div id="slot"></div></div></div>
 <div id="status">Alerts: waiting…</div>
+<button id="unlock" class="hidden">🔊 Click to enable alert sound in this browser tab</button>
 <script type="module">
 import { CONFIG } from '../lib/config.js';
 import { params, hashParams, onEvent, watch } from '../lib/state.js';
 import { bootStage, esc } from '../lib/stage.js';
 import { connectEventSub } from '../lib/twitch-events.js';
 import { goalCard } from './cards.js';
-import { playAlertSound, speak } from '../lib/sounds.js';
+import { playAlertSound, speak, audioLocked, unlockAudio } from '../lib/sounds.js';
 
 bootStage();
 document.body.classList.toggle('pos-left', params.get('pos') === 'left');
@@ -39,6 +41,10 @@ const DURATION = (Number(params.get('duration')) || 7) * 1000;
 // audio: dashboard settings (state "audio"); URL overrides: ?mute=1, ?volume=0.4, ?sound=<one clip for every alert>
 let audio = null; watch('audio', a => audio = a);
 const muted = params.get('mute') === '1';
+// OBS plays audio freely; a normal browser tab needs one click first (autoplay policy)
+const unlockBtn = document.getElementById('unlock');
+if (!window.obsstudio && !muted) setTimeout(() => { if (audioLocked()) unlockBtn.classList.remove('hidden'); }, 300);
+unlockBtn.onclick = () => unlockAudio().then(() => { unlockBtn.classList.add('hidden'); playAlertSound('follow', { volume: Number(audio?.volume ?? 0.6) }); });
 function playFor(a) {
   if (muted || !audio?.enabled) return;
   const volume = params.has('volume') ? Number(params.get('volume')) : Number(audio.volume ?? 0.6);
