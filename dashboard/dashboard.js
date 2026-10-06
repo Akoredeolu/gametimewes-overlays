@@ -143,8 +143,10 @@ async function findFixtures(teamName, comp) {
     .sort((x, y) => (LIVE.includes(y.fixture.status.short) - LIVE.includes(x.fixture.status.short)) || x.fixture.timestamp - y.fixture.timestamp);
 }
 function wireFinder(px, msgEl, onPick) {
-  $(`#${px}Team`).value = ls.get(`gtw_find_team_${px}`) ?? 'AC Milan';
+  $(`#${px}Team`).value = ls.get(`gtw_find_team_${px}`) ?? '';
   $(`#${px}Comp`).value = ls.get(`gtw_find_comp_${px}`) ?? '';
+  // picking a competition starts a fresh league search (team box cleared) — type a team after to narrow it
+  $(`#${px}Comp`).onchange = () => { $(`#${px}Team`).value = ''; ls.set(`gtw_find_team_${px}`, ''); };
   $(`#${px}Find`).onclick = async () => {
     if (!($('#afKey').value || $('#waKey').value).trim()) return $(msgEl).textContent = 'Paste your API-Football key first.';
     const team = $(`#${px}Team`).value.trim(), comp = $(`#${px}Comp`).value;
