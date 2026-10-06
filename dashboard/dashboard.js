@@ -117,15 +117,49 @@ const af = async (path, q) => {
 };
 const SHORT = { 'AC Milan': 'MIL', 'Inter': 'INT', 'Juventus': 'JUV', 'Napoli': 'NAP', 'AS Roma': 'ROM', 'Lazio': 'LAZ', 'Atalanta': 'ATA', 'Fiorentina': 'FIO', 'Bologna': 'BOL', 'Torino': 'TOR' };
 const shortOf = n => SHORT[n] || String(n).replace(/^(AC|FC|AS|SS|SSC|US|ACF|CF|SC|AFC|RC|VfB|VfL|TSG|RB|1\.)\s+/i, '').slice(0, 3).toUpperCase();
-$('#afFind').onclick = async () => {
-  try {
-    const [live, next] = await Promise.all([af('fixtures', { team: 489, live: 'all' }).catch(() => []), af('fixtures', { team: 489, next: 5 })]);
-    const all = [...live, ...next];
-    $('#afList').innerHTML = '<option value="">— pick a match —</option>' + all.map(f => `<option value="${f.fixture.id}">${f.teams.home.name} v ${f.teams.away.name} · ${new Date(f.fixture.date).toLocaleString([], { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })} (${f.fixture.status.short})</option>`).join('');
-    $('#afList').classList.remove('hidden');
-  } catch (e) { $('#afMsg').textContent = e.message; }
-};
-$('#afList').onchange = e => { if (e.target.value) { $('#afFixture').value = e.target.value; ls.set('gtw_af_fixture', e.target.value); } };
+// ---------- fixture finder (any team / competition), shared by Match + Watchalong tabs ----------
+const fmtWhen = d => new Date(d).toLocaleString([], { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+async function findFixtures(teamName, comp) {
+  const LIVE = ['1H', 'HT', '2H', 'ET', 'BT', 'P', 'LIVE', 'INT'];
+  let fixtures = [];
+  if (teamName) {
+    const teams = await af('teams', { search: teamName });
+    if (!teams.length) throw new Error(`No team matching "${teamName}"`);
+    // prefer exact name, then clubs over national/youth sides
+    const t = (teams.find(x => x.team.name.toLowerCase() === teamName.toLowerCase()) || teams.find(x => !/U\d\d|W$|Women/.test(x.team.name)) || teams[0]).team;
+    const q = { team: t.id }; if (comp && comp !== 'live') q.league = comp;
+    const [live, next] = await Promise.all([af('fixtures', { team: t.id, live: 'all' }).catch(() => []), af('fixtures', { ...q, next: 8 }).catch(() => [])]);
+    fixtures = [...live, ...next];
+    if (!fixtures.length) throw new Error(`${t.name}: no live or upcoming matches found`);
+  } else if (comp === 'live' || !comp) {
+    fixtures = await af('fixtures', { live: 'all' });
+    if (!fixtures.length) throw new Error('No live games right now — pick a team or competition to see upcoming ones');
+  } else {
+    const [live, next] = await Promise.all([af('fixtures', { live: comp }).catch(() => []), af('fixtures', { league: comp, next: 20 })]);
+    fixtures = [...live, ...next];
+  }
+  const seen = new Set();
+  return fixtures.filter(f => !seen.has(f.fixture.id) && seen.add(f.fixture.id))
+    .sort((x, y) => (LIVE.includes(y.fixture.status.short) - LIVE.includes(x.fixture.status.short)) || x.fixture.timestamp - y.fixture.timestamp);
+}
+function wireFinder(px, msgEl, onPick) {
+  $(`#${px}Team`).value = ls.get(`gtw_find_team_${px}`) ?? 'AC Milan';
+  $(`#${px}Comp`).value = ls.get(`gtw_find_comp_${px}`) ?? '';
+  $(`#${px}Find`).onclick = async () => {
+    if (!($('#afKey').value || $('#waKey').value).trim()) return $(msgEl).textContent = 'Paste your API-Football key first.';
+    const team = $(`#${px}Team`).value.trim(), comp = $(`#${px}Comp`).value;
+    ls.set(`gtw_find_team_${px}`, team); ls.set(`gtw_find_comp_${px}`, comp);
+    $(msgEl).textContent = 'Searching…';
+    try {
+      const all = await findFixtures(team, comp);
+      $(`#${px}List`).innerHTML = '<option value="">— pick a match —</option>' + all.map(f => `<option value="${f.fixture.id}" data-league="${f.league.id}">${f.teams.home.name} v ${f.teams.away.name} · ${f.league.name} · ${fmtWhen(f.fixture.date)} (${f.fixture.status.short})</option>`).join('');
+      $(`#${px}List`).classList.remove('hidden');
+      $(msgEl).textContent = `${all.length} matches found — pick one.`;
+    } catch (e) { $(msgEl).textContent = 'API-Football: ' + e.message; }
+  };
+  $(`#${px}List`).onchange = e => { const o = e.target.selectedOptions[0]; if (o?.value) onPick(o.value, o.dataset.league, o.textContent); };
+}
+wireFinder('af', '#afMsg', id => { $('#afFixture').value = id; ls.set('gtw_af_fixture', id); lineupsDone = null; $('#afMsg').textContent = 'Fixture set — press Pull now.'; });
 let afTimer = null, lineupsDone = null;
 async function afPull() {
   const id = $('#afFixture').value.trim();
@@ -167,23 +201,12 @@ $('#afAuto').onchange = e => { clearInterval(afTimer); afTimer = e.target.checke
 // ---------- watchalong overlay: key + fixture finder ----------
 $('#waKey').value = ls.get('apisports_key') || '';
 $('#waKey').onchange = () => { ls.set('apisports_key', $('#waKey').value.trim()); $('#afKey').value = $('#waKey').value; renderLinks(); };
-$('#waFind').onclick = async () => {
-  if (!$('#waKey').value.trim()) return $('#waMsg').textContent = 'Paste your API-Football key first.';
-  $('#waMsg').textContent = 'Searching…';
-  try {
-    const [live, next] = await Promise.all([af('fixtures', { team: 489, live: 'all' }).catch(() => []), af('fixtures', { team: 489, next: 5 })]);
-    const all = [...live, ...next];
-    $('#waList').innerHTML = '<option value="">— pick a match —</option>' + all.map(f => `<option value="${f.fixture.id}" data-league="${f.league.id}">${f.teams.home.name} v ${f.teams.away.name} · ${new Date(f.fixture.date).toLocaleString([], { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })} (${f.fixture.status.short})</option>`).join('');
-    $('#waList').classList.remove('hidden');
-    $('#waMsg').textContent = `${all.length} matches found — pick one to send it to the overlay.`;
-  } catch (e) { $('#waMsg').textContent = 'API-Football: ' + e.message; }
-};
 const LEAGUE_THEME = { 39: 'PL', 2: 'UCL', 3: 'UEL', 848: 'UECL', 135: 'SA', 140: 'LL', 78: 'BL', 1: 'WC' };
-$('#waList').onchange = async e => {
-  const o = e.target.selectedOptions[0]; if (!o?.value) return;
-  const ok = await savePatch('watchalong', { fixtureId: o.value, theme: LEAGUE_THEME[o.dataset.league] || 'GEN' });
-  if (ok) { $('#afFixture').value = o.value; ls.set('gtw_af_fixture', o.value); $('#waMsg').textContent = 'Sent to the overlay. It refreshes every 15 s.'; }
-};
+wireFinder('wa', '#waMsg', async (id, league, label) => {
+  const milan = /AC Milan/i.test(label);
+  const ok = await savePatch('watchalong', { fixtureId: id, theme: LEAGUE_THEME[league] || 'GEN', mode: milan ? 'milan' : 'neutral' });
+  if (ok) { $('#afFixture').value = id; ls.set('gtw_af_fixture', id); $('#waMsg').textContent = `Sent to the overlay in ${milan ? 'Rossoneri' : 'Neutral'} style — it refreshes every 15 s.`; }
+});
 
 // ---------- watchalong slips ----------
 function parseSlips(text) {
