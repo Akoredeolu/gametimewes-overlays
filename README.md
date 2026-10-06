@@ -26,7 +26,7 @@ firebase/               Realtime Database security rules
 | Watchalong | `w-start` `w-live` `w-lineups` `w-half` `w-end` `w-brb` `w-goal` `w-poll` |
 
 URL flags (any overlay): `layout=vertical` · `preview=1` (show webcam/gameplay placeholders) · `safe=1` with preview (TikTok/Shorts safe zone) · `motion=0` (no stripe animation) · `channel=<login>` (chat from another channel).
-Alerts: `types=follow,sub,raid` · `duration=7` · `sound=<mp3 url>` · `pos=left` · `demo=1`.
+Alerts: `types=follow,sub,raid` · `duration=7` · `pos=left` · `demo=1` · `mute=1` · `volume=0.4` · `sound=<one clip for every alert>`.
 Chat box: `bare=1` (transparent bubbles) · `fade=30` (seconds) · `commands=1`.
 
 ## Data sources
@@ -67,6 +67,10 @@ The web config values are public by design; the rules only let `admins` write.
 2. Double-click `bridge/start-bridge.bat` (first run installs dependencies and creates `config.json`).
 3. Put your SimBrief username in `bridge/config.json` for distance/ETE. Press `r` + Enter in the window before each new flight.
 4. Optional, for OBS on *other* devices: in Firebase **Authentication → Users → Add user** `bridge@gametimewes.local` with a password, add that user's UID under `admins`, and fill the `firebase` block in `config.json`.
+
+## Alert audio
+
+Every alert plays a built-in sound (generated in the browser, no files or licences): chime for follows, arpeggio for subs, coin blips for cheers, drum roll + stadium horn for raids, horn + crowd roar for GOAL. In the dashboard (**Countdown · Poll · Alerts → Alert audio**) set the master volume, mute, swap any alert to **Silent** or **Custom…** (a URL, or a clip you add to `sounds/` such as `sounds/goal.mp3`), and optionally read cheer/resub/redeem messages aloud. In OBS tick **Control audio via OBS** on the alerts source so it gets its own mixer fader.
 
 ## OBS
 

@@ -29,13 +29,24 @@ import { params, hashParams, onEvent, watch } from '../lib/state.js';
 import { bootStage, esc } from '../lib/stage.js';
 import { connectEventSub } from '../lib/twitch-events.js';
 import { goalCard } from './cards.js';
+import { playAlertSound, speak } from '../lib/sounds.js';
 
 bootStage();
 document.body.classList.toggle('pos-left', params.get('pos') === 'left');
 const slot = document.getElementById('slot'), statusEl = document.getElementById('status');
 const setStatus = (t, ok) => { statusEl.textContent = 'Alerts: ' + t; statusEl.classList.toggle('ok', !!ok); };
 const DURATION = (Number(params.get('duration')) || 7) * 1000;
-const sound = params.get('sound') ? new Audio(params.get('sound')) : null;
+// audio: dashboard settings (state "audio"); URL overrides: ?mute=1, ?volume=0.4, ?sound=<one clip for every alert>
+let audio = null; watch('audio', a => audio = a);
+const muted = params.get('mute') === '1';
+function playFor(a) {
+  if (muted || !audio?.enabled) return;
+  const volume = params.has('volume') ? Number(params.get('volume')) : Number(audio.volume ?? 0.6);
+  const src = params.get('sound') || audio.sounds?.[a.type] || '';
+  playAlertSound(a.type, { volume, src, amount: a.amount });
+  const ttsTypes = String(audio.ttsTypes || '').split(',').map(x => x.trim());
+  if (audio.tts && a.message && ttsTypes.includes(a.type)) speak(`${a.name} says: ${a.message}`, { volume: Math.min(1, volume + 0.2) });
+}
 let match = null; watch('match', m => match = m);
 
 const plain = (k, name, side, sideLabel, msg) => `<div class="alert" style="background:#0d0c0c;color:var(--color-bg);display:flex;flex-direction:column;">
@@ -69,7 +80,7 @@ function next() {
   busy = true;
   const a = queue.shift();
   slot.innerHTML = TPL[a.type](a);
-  sound?.play().catch(() => {});
+  playFor(a);
   setTimeout(() => {
     slot.firstElementChild?.classList.add('out');
     setTimeout(() => { slot.innerHTML = ''; busy = false; next(); }, 550);

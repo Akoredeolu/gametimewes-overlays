@@ -78,3 +78,10 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
 #toast { position: fixed; right: 20px; bottom: 20px; background: var(--g0); border-left: 6px solid var(--acc); padding: 12px 16px; font-weight: 800; opacity: 0; transition: opacity .3s; pointer-events: none; }
 #toast.on { opacity: 1; }
 .hidden { display: none !important; }
+
+.sounds { display: flex; flex-direction: column; }
+.snd { display: grid; grid-template-columns: 90px 120px 1fr auto; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 2px solid var(--line); }
+.snd b { font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+.snd select, .snd input { padding: 6px 8px; font-size: 13px; }
+.snd input.hidden { display: block !important; visibility: hidden; }
+input[type=range] { padding: 0; border: 0; background: none; accent-color: var(--acc); height: 32px; }

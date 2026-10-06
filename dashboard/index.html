@@ -153,6 +153,19 @@
     <div class="btns" id="testBtns"></div>
   </div>
   <div class="card">
+    <h2>Alert audio <small>plays from the alerts overlay in OBS</small></h2>
+    <div class="row">
+      <label class="chk"><input type="checkbox" data-bind="audio.enabled"> Sound on</label>
+      <label class="grow">Volume <span id="volOut"></span><input type="range" min="0" max="1" step="0.05" data-bind="audio.volume"></label>
+    </div>
+    <div class="sounds" id="soundRows"></div>
+    <div class="row">
+      <label class="chk"><input type="checkbox" data-bind="audio.tts"> Read messages aloud (TTS)</label>
+      <label class="grow">For<input data-bind="audio.ttsTypes" placeholder="cheer,resub,redeem"></label>
+    </div>
+    <p class="hint">Built-in sounds are generated in the overlay, no files needed. For your own clip, paste a URL or add an mp3 to the repo's <code>sounds/</code> folder and enter <code>sounds/goal.mp3</code>. ▶ previews here; test alerts above play it in OBS. In OBS tick <b>Control audio via OBS</b> on the alerts source to route it to its own mixer channel.</p>
+  </div>
+  <div class="card">
     <h2>Pro Clubs + socials</h2>
     <div class="row"><label class="w2">Pack label<input data-bind="clubs.label" class="u"></label><label class="w2">BRB line<input data-bind="clubs.brbLine"></label></div>
     <div class="row"><label>TikTok<input data-bind="socials.tiktok"></label><label>Instagram<input data-bind="socials.instagram"></label><label>YouTube<input data-bind="socials.youtube"></label><label>Handle<input data-bind="socials.handle" class="u"></label></div>

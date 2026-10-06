@@ -3,6 +3,7 @@ import { watch, write, patch, emit, auth, pruneEvents } from '../lib/state.js';
 import { watchSim, fmt } from '../lib/sim.js';
 import { connectChat } from '../lib/chat.js';
 import { tokenInfo } from '../lib/twitch-events.js';
+import { playAlertSound } from '../lib/sounds.js';
 
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const ls = { get: k => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch {} } };
@@ -39,7 +40,7 @@ auth().then(a => {
 const timers = {};
 $$('[data-bind]').forEach(el => {
   const path = el.dataset.bind.replace('.', '/');
-  const val = () => el.type === 'checkbox' ? el.checked : el.type === 'number' ? Number(el.value) : el.classList.contains('u') ? el.value.toUpperCase() : el.value;
+  const val = () => el.type === 'checkbox' ? el.checked : (el.type === 'number' || el.type === 'range') ? Number(el.value) : el.classList.contains('u') ? el.value.toUpperCase() : el.value;
   const ev = el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'input';
   el.addEventListener(ev, () => { clearTimeout(timers[path]); timers[path] = setTimeout(() => save(path, val()), ev === 'input' ? 350 : 0); });
 });
@@ -49,12 +50,13 @@ const fill = (section, obj) => $$(`[data-bind^="${section}."]`).forEach(el => {
   if (el.type === 'checkbox') el.checked = v !== false && v != null; else el.value = v ?? '';
 });
 // subscribe after the whole module has initialised (local mode fires callbacks synchronously)
-queueMicrotask(() => ['flight', 'match', 'watchalong', 'poll', 'clubs', 'socials', 'countdown'].forEach(sec => watch(sec, v => { S[sec] = v; fill(sec, v); onState(sec); })));
+queueMicrotask(() => ['flight', 'match', 'watchalong', 'poll', 'clubs', 'socials', 'countdown', 'audio'].forEach(sec => watch(sec, v => { S[sec] = v; fill(sec, v); onState(sec); })));
 
 function onState(sec) {
   if (sec === 'flight') paintPhase();
   if (sec === 'match') { $('#hs').textContent = S.match.homeScore; $('#as').textContent = S.match.awayScore; $('#hsN').textContent = String(S.match.homeShort).toUpperCase(); $('#asN').textContent = String(S.match.awayShort).toUpperCase(); }
   if (sec === 'watchalong') paintSlips();
+  if (sec === 'audio') paintSounds();
   if (sec === 'poll') { $('#pollState').textContent = S.poll.open ? 'Open' : 'Closed'; $('#pollState').classList.toggle('live', !!S.poll.open); resetTally(); }
 }
 
@@ -229,6 +231,29 @@ $$('#testBtns button').forEach(b => b.onclick = () => {
   const t = b.dataset.t, amt = Number($('#tAmt').value) || 1;
   emit('alert', { type: t, name: $('#tName').value || 'Tester', amount: t === 'cheer' ? amt * 100 : t === 'raid' ? amt * 10 : amt, message: t === 'redeem' ? 'Hydrate!' : t === 'resub' ? 'Forza Milan!' : '' }).then(() => toast(`Test ${TESTS[t]} sent`));
 });
+
+// ---------- alert audio ----------
+const SOUND_TYPES = { follow: 'Follow', sub: 'Sub', resub: 'Resub', gift: 'Gift subs', cheer: 'Cheer', raid: 'Raid', redeem: 'Redeem', goal: 'GOAL' };
+$('#soundRows').innerHTML = Object.entries(SOUND_TYPES).map(([k, v]) => `<div class="snd" data-k="${k}"><b>${v}</b>
+  <select><option value="">Built-in</option><option value="none">Silent</option><option value="custom">Custom…</option></select>
+  <input placeholder="https://… or sounds/${k}.mp3" class="hidden"><button class="btn-sm" title="Preview">▶</button></div>`).join('');
+$$('#soundRows .snd').forEach(row => {
+  const k = row.dataset.k, sel = row.querySelector('select'), inp = row.querySelector('input');
+  const commit = () => save(`audio/sounds/${k}`, sel.value === 'custom' ? inp.value.trim() : sel.value);
+  sel.onchange = () => { inp.classList.toggle('hidden', sel.value !== 'custom'); if (sel.value !== 'custom' || inp.value.trim()) commit(); else inp.focus(); };
+  inp.onchange = commit;
+  row.querySelector('button').onclick = () => playAlertSound(k, { volume: Number(S.audio?.volume ?? 0.6), src: sel.value === 'custom' ? inp.value.trim() : sel.value, amount: k === 'cheer' ? 500 : 3 });
+});
+function paintSounds() {
+  $('#volOut').textContent = Math.round((S.audio.volume ?? 0.6) * 100) + '%';
+  $$('#soundRows .snd').forEach(row => {
+    const v = S.audio.sounds?.[row.dataset.k] || '', sel = row.querySelector('select'), inp = row.querySelector('input');
+    if (document.activeElement === inp) return;
+    sel.value = v === '' || v === 'none' ? v : 'custom';
+    inp.value = v === '' || v === 'none' ? '' : v;
+    inp.classList.toggle('hidden', sel.value !== 'custom');
+  });
+}
 
 // ---------- OBS links ----------
 const SCENES = [
