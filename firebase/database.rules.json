@@ -1,0 +1,17 @@
+{
+  "rules": {
+    "gtw": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      "events": {
+        "$channel": {
+          ".indexOn": ["ts"]
+        }
+      }
+    },
+    "admins": {
+      ".read": "auth != null && data.child(auth.uid).val() === true",
+      ".write": false
+    }
+  }
+}

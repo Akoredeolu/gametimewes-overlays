@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gametimewes · Chat box</title>
+<link rel="stylesheet" href="../ds/styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="../lib/overlay.css">
+<style>
+  /* No fixed stage here: the box fills the browser source, so size it in OBS (design: 520×760; vertical: 1000×900). */
+  body { display: flex; }
+  .box { flex: 1; display: flex; flex-direction: column; background: var(--color-text); min-height: 0; }
+  .head { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 2px solid var(--color-neutral-800); }
+  .head b { font-size: 24px; font-weight: 800; letter-spacing: .1em; }
+  .head span { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 600; letter-spacing: .12em; color: var(--color-neutral-400); }
+  .chat-list { flex: 1; padding: 0 24px 16px; min-height: 0; }
+  body.bare .box { background: transparent; } body.bare .head, body.bare .stripe { display: none; }
+  body.bare .chat-msg { background: rgba(13,12,12,.85); border-bottom: 0; margin-top: 6px; padding: 10px 14px; border-left: 6px solid var(--color-accent); }
+</style>
+</head>
+<body>
+<div class="box"><div class="stripe"></div><div class="head"><b>CHAT</b><span><i class="pulse"></i>LIVE</span></div><div class="chat-list" id="list"></div></div>
+<script type="module">
+import { CONFIG } from '../lib/config.js';
+import { params } from '../lib/state.js';
+import { mountChatList } from '../lib/chat.js';
+document.body.classList.toggle('bare', params.get('bare') === '1');
+document.body.classList.toggle('still', params.get('motion') === '0');
+mountChatList(document.getElementById('list'), {
+  channel: params.get('channel') || CONFIG.channel,
+  fadeAfter: Number(params.get('fade')) || 0,
+  hideCommands: params.get('commands') !== '1',
+});
+</script>
+</body>
+</html>

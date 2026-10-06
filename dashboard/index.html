@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gametimewes · Stream Control</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="../ds/styles.css">
+<link rel="stylesheet" href="./dashboard.css">
+</head>
+<body>
+<header class="top">
+  <div class="stripe"></div>
+  <div class="bar">
+    <div class="brand"><b>GAMETIMEWES</b><span>Stream control</span></div>
+    <nav id="tabs">
+      <button data-tab="flight" class="on">Flight</button>
+      <button data-tab="match">Match</button>
+      <button data-tab="watchalong">Watchalong API</button>
+      <button data-tab="stream">Countdown · Poll · Alerts</button>
+      <button data-tab="links">OBS links</button>
+      <button data-tab="setup">Setup</button>
+    </nav>
+    <div class="who"><span id="mode" class="pill"></span><span id="user"></span><button id="signin" class="btn-sm">Sign in</button></div>
+  </div>
+</header>
+
+<main>
+<!-- ================= FLIGHT ================= -->
+<section data-pane="flight" class="grid">
+  <div class="card span2">
+    <h2>Flight <small>f-start · f-game · f-cockpit · f-brb · f-end</small></h2>
+    <div class="row">
+      <label>Callsign<input data-bind="flight.callsign"></label>
+      <label>From<input data-bind="flight.from" class="u"></label>
+      <label>To<input data-bind="flight.to" class="u"></label>
+      <label class="w2">Destination city<input data-bind="flight.toCity"></label>
+    </div>
+    <div class="row">
+      <label class="w2">Aircraft<input data-bind="flight.aircraft"></label>
+      <label>Leg<input data-bind="flight.leg"></label>
+      <label class="w2">Series<input data-bind="flight.series" class="u"></label>
+      <label>Network<input data-bind="flight.network" class="u"></label>
+    </div>
+    <div class="row">
+      <label>Phase source
+        <select data-bind="flight.phaseMode"><option value="auto">Auto (sim bridge)</option><option value="manual">Manual</option></select></label>
+      <div class="seg" id="phaseBtns"></div>
+    </div>
+    <div class="row">
+      <label class="w2">SimBrief username<input data-bind="flight.simbrief" placeholder="your SimBrief login"></label>
+      <button id="sbImport" class="btn btn-primary">Import latest OFP</button>
+      <label class="chk"><input type="checkbox" data-bind="flight.telemetry"> Show live telemetry strip</label>
+    </div>
+    <p class="hint" id="sbMsg"></p>
+  </div>
+  <div class="card">
+    <h2>Live telemetry <small id="simState">bridge offline</small></h2>
+    <div class="tele" id="tele"></div>
+    <p class="hint">Run <code>bridge/start-bridge.bat</code> on the sim PC. Phase, distance and ETE update automatically.</p>
+  </div>
+</section>
+
+<!-- ================= MATCH ================= -->
+<section data-pane="match" class="grid hidden">
+  <div class="card span2">
+    <h2>Match <small>w-start · w-live · w-lineups · w-half · w-end · w-brb · w-goal · w-poll</small></h2>
+    <div class="row">
+      <label>Style<select data-bind="match.mode"><option>Milan</option><option>Neutral</option></select></label>
+      <label class="w2">Competition<input data-bind="match.competition"></label>
+    </div>
+    <div class="row">
+      <label class="w2">Home<input data-bind="match.home"></label><label>Short<input data-bind="match.homeShort" class="u" maxlength="4"></label>
+      <label class="w2">Away<input data-bind="match.away"></label><label>Short<input data-bind="match.awayShort" class="u" maxlength="4"></label>
+    </div>
+    <div class="scoreline">
+      <div class="sc"><span id="hsN">HOME</span><button data-score="homeScore" data-d="-1">−</button><b id="hs">0</b><button data-score="homeScore" data-d="1">+</button></div>
+      <div class="sc"><span id="asN">AWAY</span><button data-score="awayScore" data-d="-1">−</button><b id="as">0</b><button data-score="awayScore" data-d="1">+</button></div>
+      <label>Minute<input data-bind="match.minute" style="width:90px"></label>
+      <label class="w2">Scorer<input data-bind="match.scorer"></label>
+      <button id="goalBtn" class="btn btn-primary big">GOAL alert</button>
+    </div>
+    <div class="row">
+      <label>Home formation<input data-bind="match.homeFormation"></label>
+      <label>Away formation<input data-bind="match.awayFormation"></label>
+      <label>Half-time (min)<input type="number" data-bind="match.secondHalfMinutes" style="width:90px"></label>
+      <button id="htBtn" class="btn btn-secondary">Start half-time countdown</button>
+    </div>
+    <div class="row">
+      <label class="grow">Home XI <small>"9 Name, 10 Name, …"</small><textarea rows="3" data-bind="match.homeXI"></textarea></label>
+      <label class="grow">Away XI<textarea rows="3" data-bind="match.awayXI"></textarea></label>
+    </div>
+  </div>
+  <div class="card">
+    <h2>API-Football sync</h2>
+    <p class="hint">Fills teams, score, minute, scorer and lineups from a fixture. Your key stays in this browser only.</p>
+    <label>API key<input id="afKey" type="password" autocomplete="off"></label>
+    <div class="row"><label class="grow">Fixture ID<input id="afFixture" placeholder="e.g. 1223590"></label><button id="afFind" class="btn btn-secondary">Find Milan</button></div>
+    <select id="afList" class="hidden"></select>
+    <div class="row"><button id="afPull" class="btn btn-primary">Pull now</button><label class="chk"><input type="checkbox" id="afAuto"> Auto every 60 s</label></div>
+    <label class="chk"><input type="checkbox" id="afGoal" checked> Fire GOAL alert when the score changes</label>
+    <p class="hint" id="afMsg"></p>
+  </div>
+</section>
+
+<!-- ================= WATCHALONG API OVERLAY ================= -->
+<section data-pane="watchalong" class="grid hidden">
+  <div class="card span2">
+    <h2>Watchalong overlay <small>overlays/watchalong.html — scorebug, lineups, events, bet slips</small></h2>
+    <div class="row">
+      <label>Fixture ID<input data-bind="watchalong.fixtureId"></label>
+      <label>Competition<select data-bind="watchalong.theme">
+        <option value="PL">Premier League</option><option value="UCL">Champions League</option><option value="UEL">Europa League</option>
+        <option value="UECL">Conference League</option><option value="SA">Serie A</option><option value="LL">La Liga</option>
+        <option value="BL">Bundesliga</option><option value="WC">World Cup</option><option value="GEN">Generic</option></select></label>
+      <label>Style<select data-bind="watchalong.mode"><option value="milan">Rossoneri (Milan)</option><option value="neutral">Neutral</option></select></label>
+      <label>Handle<input data-bind="watchalong.handle"></label>
+      <label class="w2">Custom logo URL<input data-bind="watchalong.badge"></label>
+    </div>
+    <div class="row">
+      <label class="chk"><input type="checkbox" data-bind="watchalong.lineups"> Lineups</label>
+      <label class="chk"><input type="checkbox" data-bind="watchalong.cams"> 2-cam frames</label>
+      <label>Cam 1<input data-bind="watchalong.host"></label><label>Cam 2<input data-bind="watchalong.guest"></label>
+      <label>Currency<input data-bind="watchalong.cur" style="width:70px"></label>
+    </div>
+    <h3>Bet slips</h3>
+    <div class="row">
+      <label class="grow">One leg per line, add "@ odds". New slip: "# Name | stake"
+        <textarea id="slipText" rows="6" placeholder="# Acca 1 | 10&#10;Milan win @ 1.70&#10;Both teams to score @ 1.95"></textarea></label>
+    </div>
+    <div class="row"><button id="slipSave" class="btn btn-primary">Update slips</button><button id="slipClear" class="btn btn-ghost">Clear slips</button></div>
+    <div id="slipLive"></div>
+  </div>
+</section>
+
+<!-- ================= STREAM TOOLS ================= -->
+<section data-pane="stream" class="grid hidden">
+  <div class="card">
+    <h2>Countdown <small>start · half-time · kick-off</small></h2>
+    <div class="clock" id="clock">05:00</div>
+    <div class="row"><label>Minutes<input type="number" id="cdMin" value="5" min="1" max="120" style="width:90px"></label>
+      <button id="cdStart" class="btn btn-primary">Start</button><button id="cdAdd" class="btn btn-secondary">+1 min</button><button id="cdStop" class="btn btn-ghost">Reset</button></div>
+  </div>
+  <div class="card">
+    <h2>Score poll <small>w-poll · chat votes "!predict 2-1"</small></h2>
+    <div class="row"><label class="w2">Title<input data-bind="poll.title" class="u"></label><label>Command<input data-bind="poll.command"></label></div>
+    <div class="row"><button id="pollOpen" class="btn btn-primary">Open new poll</button><button id="pollClose" class="btn btn-secondary">Close</button><span class="pill" id="pollState"></span></div>
+    <div id="pollTally" class="tally"></div>
+  </div>
+  <div class="card">
+    <h2>Test alerts <small>overlays/alerts.html</small></h2>
+    <div class="row"><label class="grow">Name<input id="tName" value="Rossonero22"></label><label>Amount<input id="tAmt" type="number" value="3" style="width:90px"></label></div>
+    <div class="btns" id="testBtns"></div>
+  </div>
+  <div class="card">
+    <h2>Pro Clubs + socials</h2>
+    <div class="row"><label class="w2">Pack label<input data-bind="clubs.label" class="u"></label><label class="w2">BRB line<input data-bind="clubs.brbLine"></label></div>
+    <div class="row"><label>TikTok<input data-bind="socials.tiktok"></label><label>Instagram<input data-bind="socials.instagram"></label><label>YouTube<input data-bind="socials.youtube"></label><label>Handle<input data-bind="socials.handle" class="u"></label></div>
+  </div>
+</section>
+
+<!-- ================= LINKS ================= -->
+<section data-pane="links" class="hidden">
+  <div class="card">
+    <h2>OBS browser sources</h2>
+    <div class="row">
+      <div class="seg" id="layoutSeg"><button data-l="h" class="on">Horizontal 1920×1080</button><button data-l="v">Vertical 1080×1920</button></div>
+      <label class="chk"><input type="checkbox" id="prevToggle"> Preview placeholders</label>
+    </div>
+    <p class="hint">In OBS: Sources → + → Browser → paste URL, set the width/height shown, tick "Shutdown source when not visible" off for alerts and chat. Every link pulls live data from this dashboard.</p>
+    <div id="links"></div>
+  </div>
+</section>
+
+<!-- ================= SETUP ================= -->
+<section data-pane="setup" class="grid hidden">
+  <div class="card span2">
+    <h2>Setup checklist</h2>
+    <ol class="steps" id="steps"></ol>
+  </div>
+  <div class="card">
+    <h2>Twitch connection</h2>
+    <p id="twitchState" class="hint">Checking…</p>
+    <a class="btn btn-primary" href="../auth/">Connect Twitch for alerts</a>
+    <h3>Housekeeping</h3>
+    <button id="prune" class="btn btn-secondary">Delete alert events older than 1 day</button>
+    <p class="hint" id="pruneMsg"></p>
+  </div>
+</section>
+</main>
+<div id="toast"></div>
+<script type="module" src="./dashboard.js"></script>
+</body>
+</html>

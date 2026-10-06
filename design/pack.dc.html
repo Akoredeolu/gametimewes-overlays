@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="_ds/modernist-20a95c74-c408-4909-9c9e-e96d1fc16f57/styles.css">
+<script src="_ds/modernist-20a95c74-c408-4909-9c9e-e96d1fc16f57/_ds_bundle.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
+<style>
+body{margin:0;background:#0d0c0c;font-family:"Archivo",system-ui,sans-serif}
+a{color:#ff9783}a:hover{color:#ec3013}
+@keyframes gw-pulse{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes gw-drift{to{background-position:60px 0}}
+@keyframes gw-drift-lg{to{background-position:320px 0}}
+</style>
+</helmet>
+<div id="gw-pack" style="display:flex;flex-direction:column;gap:72px;padding:72px;background:#161413;color:var(--color-bg);width:1720px;">
+
+<div style="display:flex;flex-direction:column;gap:16px;border-bottom:2px solid var(--color-bg);padding-bottom:28px;">
+<div style="height:14px;width:240px;background:repeating-linear-gradient(90deg,var(--color-accent) 0 30px,#0d0c0c 30px 60px);"></div>
+<div style="font-size:64px;font-weight:800;letter-spacing:-.03em;line-height:1;text-transform:uppercase;">Gametimewes · Rossoneri pack</div>
+<div style="font-size:18px;line-height:1.5;color:var(--color-neutral-300);max-width:1100px;text-wrap:pretty;">Six profile panels, the flight sim pack and the Pro Clubs pack, plus alerts and a chat box. Every scene is 1920×1080, shown here at 40%. To use a scene in OBS, add this file as a Browser Source at 1920×1080 with the scene id appended, e.g. <span style="font-family:ui-monospace,Menlo,monospace;color:var(--color-accent-400);">?scene=f-game</span>. The background goes transparent and the gameplay and webcam placeholders drop out.</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:20px;">
+<div style="display:flex;align-items:baseline;gap:16px;border-bottom:2px solid var(--color-neutral-800);padding-bottom:12px;"><div style="font-size:14px;font-weight:600;color:var(--color-accent-400);">01</div><div style="font-size:32px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;">Profile panels</div><div style="font-size:15px;color:var(--color-neutral-400);">320px wide · export each as an image</div></div>
+<div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start;">
+
+<div data-panel="about" style="width:320px;background:var(--color-text);display:flex;flex-direction:column;">
+<div style="height:14px;background:repeating-linear-gradient(90deg,var(--color-accent) 0 20px,#0d0c0c 20px 40px);"></div>
+<div style="padding:16px 16px 12px;font-size:28px;font-weight:800;letter-spacing:-.02em;text-transform:uppercase;border-bottom:2px solid var(--color-neutral-800);">About me</div>
+<div style="padding:16px;font-size:15px;line-height:1.55;color:var(--color-neutral-200);text-wrap:pretty;">Hey, I'm Wes 👋 Nigerian-American software engineer by day, streamer by night. AC Milan watchalongs, EA FC Pro Clubs with the boys, and MSFS 2024 flights on VATSIM, including the weekly TBM Tour of America ✈️ Banter, football takes and good vibes. Forza Milan 🔴⚫</div>
+</div>
+
+<div data-panel="socials" style="width:320px;background:var(--color-text);display:flex;flex-direction:column;">
+<div style="height:14px;background:repeating-linear-gradient(90deg,var(--color-accent) 0 20px,#0d0c0c 20px 40px);"></div>
+<div style="padding:16px 16px 12px;font-size:28px;font-weight:800;letter-spacing:-.02em;text-transform:uppercase;border-bottom:2px solid var(--color-neutral-800);">Socials</div>
+<div style="display:flex;flex-direction:column;padding:8px 16px 12px;gap:8px;">
+<div style="display:flex;flex-direction:column;padding:8px 0;border-bottom:2px solid var(--color-neutral-800);"><div style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-400);">TikTok</div><div style="font-size:20px;font-weight:800;">@gametimewes</div></div>
+<div style="display:flex;flex-direction:column;padding:8px 0;border-bottom:2px solid var(--color-neutral-800);"><div style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-400);">Instagram</div><div style="font-size:20px;font-weight:800;">@gametimewes</div></div>
+<div style="display:flex;flex-direction:column;padding:8px 0;"><div style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-400);">YouTube</div><div style="font-size:20px;font-weight:800;">@gametimewes</div></div>
+</div>
+</div>
+
+<div data-panel="categories" style="width:320px;background:var(--color-text);display:flex;flex-direction:column;">
+<div style="height:14px;background:repeating-linear-gradient(90deg,var(--color-accent) 0 20px,#0d0c0c 20px 40px);"></div>
+<div style="padding:16px 16px 12px;font-size:28px;font-weight:800;letter-spacing:-.02em;text-transform:uppercase;border-bottom:2px solid var(--color-neutral-800);">Categories</div>
+<div style="display:flex;flex-direction:column;padding:12px 16px 16px;gap:8px;">
+<div style="background:var(--color-accent);color:#fff;padding:10px 12px;font-size:17px;font-weight:800;">MSFS 2024</div>
+<div style="background:#0d0c0c;padding:10px 12px;font-size:17px;font-weight:800;">Football Watchalongs</div>
+<div style="background:var(--color-accent);color:#fff;padding:10px 12px;font-size:17px;font-weight:800;">EAFC</div>
+<div style="background:#0d0c0c;padding:10px 12px;font-size:17px;font-weight:800;">Football Manager</div>
+<div style="background:var(--color-accent);color:#fff;padding:10px 12px;font-size:17px;font-weight:800;">Reactions</div>
+</div>
+</div>
+
+<div data-panel="rules" style="width:320px;background:var(--color-text);display:flex;flex-direction:column;">
+<div style="height:14px;background:repeating-linear-gradient(90deg,var(--color-accent) 0 20px,#0d0c0c 20px 40px);"></div>
+<div style="padding:16px 16px 12px;font-size:28px;font-weight:800;letter-spacing:-.02em;text-transform:uppercase;border-bottom:2px solid var(--color-neutral-800);">Chat rules</div>
+<div style="display:flex;flex-direction:column;padding:4px 16px 8px;color:var(--color-neutral-200);">
+<div style="display:flex;gap:12px;padding:10px 0;font-size:15px;line-height:1.4;border-bottom:2px solid var(--color-neutral-800);"><div style="font-weight:800;color:var(--color-accent-400);">01</div><div>Banter is welcome. Hate isn't.</div></div>
+<div style="display:flex;gap:12px;padding:10px 0;font-size:15px;line-height:1.4;border-bottom:2px solid var(--color-neutral-800);"><div style="font-weight:800;color:var(--color-accent-400);">02</div><div>No spam or self-promo.</div></div>
+<div style="display:flex;gap:12px;padding:10px 0;font-size:15px;line-height:1.4;border-bottom:2px solid var(--color-neutral-800);"><div style="font-weight:800;color:var(--color-accent-400);">03</div><div>No score spoilers during watchalongs.</div></div>
+<div style="display:flex;gap:12px;padding:10px 0;font-size:15px;line-height:1.4;"><div style="font-weight:800;color:var(--color-accent-400);">04</div><div>Mods have the final word.</div></div>
+</div>
+</div>
+
+<div data-panel="setup" style="width:320px;background:var(--color-text);display:flex;flex-direction:column;">
+<div style="height:14px;background:repeating-linear-gradient(90deg,var(--color-accent) 0 20px,#0d0c0c 20px 40px);"></div>
+<div style="padding:16px 16px 12px;font-size:28px;font-weight:800;letter-spacing:-.02em;text-transform:uppercase;border-bottom:2px solid var(--color-neutral-800);">Setup</div>
+<div style="display:grid;grid-template-columns:96px 1fr;padding:0 16px 4px;font-size:15px;color:var(--color-neutral-200);">
+<div style="padding:11px 0;border-bottom:2px solid var(--color-neutral-800);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-400);">CPU</div><div style="padding:11px 0;border-bottom:2px solid var(--color-neutral-800);">Add yours</div>
+<div style="padding:11px 0;border-bottom:2px solid var(--color-neutral-800);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-400);">GPU</div><div style="padding:11px 0;border-bottom:2px solid var(--color-neutral-800);">Add yours</div>
+<div style="padding:11px 0;border-bottom:2px solid var(--color-neutral-800);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-400);">Yoke</div><div style="padding:11px 0;border-bottom:2px solid var(--color-neutral-800);">Add yours</div>
+<div style="padding:11px 0;border-bottom:2px solid var(--color-neutral-800);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-400);">Camera</div><div style="padding:11px 0;border-bottom:2px solid var(--color-neutral-800);">Add yours</div>
+<div style="padding:11px 0;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--color-accent-400);">Mic</div><div style="padding:11px 0;">Add yours</div>
+</div>
+</div>
+
+<div data-panel="discord" style="width:320px;display:flex;flex-direction:column;background:repeating-linear-gradient(90deg,var(--color-accent) 0 40px,#0d0c0c 40px 80px);padding:16px;">
+<div style="background:var(--color-text);padding:16px;display:flex;flex-direction:column;gap:16px;">
+<div style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-400);">Community</div>
+<div style="font-size:40px;font-weight:800;line-height:.95;letter-spacing:-.03em;text-transform:uppercase;">Join the Discord</div>
+<div style="background:var(--color-accent);color:#fff;padding:10px 12px;font-size:15px;font-weight:600;">discord.gg/your-invite →</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:20px;">
+<div style="display:flex;align-items:baseline;gap:16px;border-bottom:2px solid var(--color-neutral-800);padding-bottom:12px;"><div style="font-size:14px;font-weight:600;color:var(--color-accent-400);">02</div><div style="font-size:32px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;">Flight sim pack</div><div style="font-size:15px;color:var(--color-neutral-400);">MSFS 2024 · VATSIM · route, aircraft and phase are Tweaks</div></div>
+<div style="display:grid;grid-template-columns:repeat(2,768px);gap:40px 32px;">
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Starting soon</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=f-start</div></div>
+<div data-scene="f-start" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:#0d0c0c;color:var(--color-bg);display:flex;flex-direction:column;padding:80px 96px;gap:56px;">
+<div style="display:flex;justify-content:space-between;align-items:flex-end;">
+<div style="display:flex;flex-direction:column;gap:12px;"><div style="font-size:30px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">DEPARTURES · GAMETIMEWES</div><div style="font-size:160px;font-weight:800;line-height:.88;letter-spacing:-.045em;text-transform:uppercase;white-space:nowrap;">Starting soon</div></div>
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;"><div style="font-size:24px;font-weight:600;letter-spacing:.14em;color:var(--color-neutral-400);">GATE OPENS IN</div><div style="font-size:120px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;color:var(--color-accent);">{{ countdown }}</div></div>
+</div>
+<div style="display:flex;flex-direction:column;border-top:4px solid var(--color-bg);">
+<div style="display:grid;grid-template-columns:1fr 1.2fr 2fr 1.4fr 1.4fr;padding:20px 0;font-size:22px;font-weight:600;letter-spacing:.14em;color:var(--color-neutral-400);border-bottom:4px solid var(--color-neutral-800);"><div>FLIGHT</div><div>FROM</div><div>DESTINATION</div><div>AIRCRAFT</div><div>STATUS</div></div>
+<div style="display:grid;grid-template-columns:1fr 1.2fr 2fr 1.4fr 1.4fr;align-items:center;padding:28px 0;font-size:56px;font-weight:800;border-bottom:4px solid var(--color-neutral-800);"><div>{{ callsign }}</div><div>{{ from }}</div><div style="white-space:nowrap;">{{ toCity }}</div><div>{{ aircraft }}</div><div><span style="background:var(--color-accent);color:#fff;padding:6px 18px;">BOARDING</span></div></div>
+</div>
+<div style="margin-top:auto;display:flex;justify-content:space-between;font-size:28px;font-weight:600;letter-spacing:.08em;color:var(--color-neutral-400);"><div>TBM TOUR OF AMERICA · LEG {{ leg }} · VATSIM</div><div>@GAMETIMEWES</div></div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Gameplay + webcam</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=f-game</div></div>
+<div data-scene="f-game" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div data-ph-bg="" style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:repeating-linear-gradient(135deg,#444141 0 4px,#605d5d 4px 28px);">
+<div data-ph="" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:ui-monospace,Menlo,monospace;font-size:28px;color:#f3f2f2;background:#0d0c0c;padding:8px 16px;">GAMEPLAY CAPTURE · MSFS 2024</div>
+<div style="position:absolute;left:48px;top:48px;display:flex;background:#0d0c0c;color:var(--color-bg);border-top:8px solid var(--color-accent);line-height:1.1;">
+<div style="padding:18px 28px;display:flex;flex-direction:column;gap:6px;border-right:2px solid var(--color-neutral-800);"><div style="font-size:16px;font-weight:600;letter-spacing:.14em;color:var(--color-neutral-400);">FLIGHT</div><div style="font-size:36px;font-weight:800;">{{ callsign }}</div></div>
+<div style="padding:18px 28px;display:flex;flex-direction:column;gap:6px;border-right:2px solid var(--color-neutral-800);"><div style="font-size:16px;font-weight:600;letter-spacing:.14em;color:var(--color-neutral-400);">ROUTE</div><div style="font-size:36px;font-weight:800;">{{ from }} → {{ to }}</div></div>
+<div style="padding:18px 28px;display:flex;flex-direction:column;gap:6px;border-right:2px solid var(--color-neutral-800);"><div style="font-size:16px;font-weight:600;letter-spacing:.14em;color:var(--color-neutral-400);">AIRCRAFT</div><div style="font-size:36px;font-weight:800;">{{ aircraft }}</div></div>
+<div style="padding:18px 28px;display:flex;flex-direction:column;gap:6px;border-right:2px solid var(--color-neutral-800);"><div style="font-size:16px;font-weight:600;letter-spacing:.14em;color:var(--color-neutral-400);">TOUR</div><div style="font-size:36px;font-weight:800;">LEG {{ leg }}</div></div>
+<div style="padding:18px 28px;display:flex;flex-direction:column;gap:6px;background:var(--color-accent);color:#fff;"><div style="font-size:16px;font-weight:600;letter-spacing:.14em;">PHASE</div><div style="font-size:36px;font-weight:800;">{{ phase }}</div></div>
+</div>
+<div style="position:absolute;right:48px;bottom:48px;width:480px;display:flex;flex-direction:column;">
+{{ stripe }}
+<div data-ph="" style="height:270px;background:repeating-linear-gradient(135deg,#2d2b2b 0 4px,#444141 4px 24px);display:flex;align-items:flex-end;padding:16px;font-family:ui-monospace,Menlo,monospace;font-size:22px;color:#f3f2f2;">WEBCAM</div>
+<div style="display:flex;align-items:center;gap:16px;background:#0d0c0c;color:var(--color-bg);padding:14px 20px;font-size:28px;font-weight:800;">{{ pulse }}<span>GAMETIMEWES</span><span style="margin-left:auto;font-size:20px;font-weight:600;letter-spacing:.12em;color:var(--color-neutral-400);">VATSIM</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Cockpit · minimal</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=f-cockpit</div></div>
+<div data-scene="f-cockpit" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div data-ph-bg="" style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:repeating-linear-gradient(135deg,#444141 0 4px,#605d5d 4px 28px);">
+<div data-ph="" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:ui-monospace,Menlo,monospace;font-size:28px;color:#f3f2f2;background:#0d0c0c;padding:8px 16px;">FULL-SCREEN COCKPIT VIEW</div>
+<div style="position:absolute;left:48px;bottom:48px;display:flex;flex-direction:column;width:640px;">
+{{ stripe }}
+<div style="display:flex;align-items:center;gap:20px;background:#0d0c0c;color:var(--color-bg);padding:16px 22px;font-size:28px;font-weight:800;line-height:1.1;">{{ pulse }}<span>{{ callsign }}</span><span style="color:var(--color-neutral-400);font-weight:600;">{{ from }} → {{ to }}</span><span style="margin-left:auto;background:var(--color-accent);color:#fff;padding:4px 12px;font-size:22px;letter-spacing:.08em;">{{ phase }}</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Just chatting</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=f-chat</div></div>
+<div data-scene="f-chat" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:#0d0c0c;color:var(--color-bg);display:grid;grid-template-columns:1fr 520px;grid-template-rows:auto 1fr auto;gap:40px;padding:64px 96px;">
+<div style="grid-column:1 / -1;display:flex;justify-content:space-between;align-items:flex-end;border-bottom:4px solid var(--color-bg);padding-bottom:28px;"><div style="font-size:96px;font-weight:800;line-height:.9;letter-spacing:-.04em;text-transform:uppercase;">Just chatting</div><div style="display:flex;align-items:center;gap:16px;font-size:28px;font-weight:800;">{{ pulse }}GAMETIMEWES</div></div>
+<div style="display:flex;flex-direction:column;min-height:0;">
+{{ stripe }}
+<div data-ph="" style="flex:1;background:repeating-linear-gradient(135deg,#2d2b2b 0 4px,#444141 4px 24px);display:flex;align-items:flex-end;padding:20px;font-family:ui-monospace,Menlo,monospace;font-size:26px;color:#f3f2f2;">WEBCAM · 16:9</div>
+</div>
+<div style="display:flex;flex-direction:column;background:var(--color-text);min-height:0;">
+{{ stripe }}
+<div style="padding:18px 24px;font-size:24px;font-weight:800;letter-spacing:.1em;border-bottom:2px solid var(--color-neutral-800);">CHAT</div>
+<div data-ph="" style="flex:1;margin:20px;background:repeating-linear-gradient(135deg,#2d2b2b 0 4px,#444141 4px 24px);display:flex;align-items:flex-end;padding:16px;font-family:ui-monospace,Menlo,monospace;font-size:20px;color:#f3f2f2;">CHAT WIDGET</div>
+</div>
+<div style="grid-column:1 / -1;display:flex;justify-content:space-between;font-size:26px;font-weight:600;letter-spacing:.08em;color:var(--color-neutral-400);"><div>TIKTOK · INSTAGRAM · YOUTUBE</div><div>@GAMETIMEWES</div></div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Be right back</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=f-brb</div></div>
+<div data-scene="f-brb" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:#0d0c0c;color:var(--color-bg);display:flex;flex-direction:column;padding:80px 96px;">
+<div style="font-size:30px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">HOLDING PATTERN</div>
+<div style="font-size:220px;font-weight:800;line-height:.88;letter-spacing:-.045em;text-transform:uppercase;margin-top:24px;">Be right<br>back</div>
+<div style="font-size:40px;font-weight:600;color:var(--color-neutral-300);margin-top:40px;">Autopilot's got it.</div>
+<div style="margin-top:auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:4px solid var(--color-bg);line-height:1.1;">
+<div style="padding:28px 0;display:flex;flex-direction:column;gap:8px;"><div style="font-size:20px;font-weight:600;letter-spacing:.14em;color:var(--color-neutral-400);">FLIGHT</div><div style="font-size:48px;font-weight:800;">{{ callsign }}</div></div>
+<div style="padding:28px 0;display:flex;flex-direction:column;gap:8px;"><div style="font-size:20px;font-weight:600;letter-spacing:.14em;color:var(--color-neutral-400);">ROUTE</div><div style="font-size:48px;font-weight:800;">{{ from }} → {{ to }}</div></div>
+<div style="padding:28px 0;display:flex;flex-direction:column;gap:8px;"><div style="font-size:20px;font-weight:600;letter-spacing:.14em;color:var(--color-neutral-400);">AIRCRAFT</div><div style="font-size:48px;font-weight:800;">{{ aircraft }}</div></div>
+<div style="padding:28px 32px;display:flex;flex-direction:column;gap:8px;background:var(--color-accent);color:#fff;"><div style="font-size:20px;font-weight:600;letter-spacing:.14em;">PHASE</div><div style="font-size:48px;font-weight:800;">{{ phase }}</div></div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Ending</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=f-end</div></div>
+<div data-scene="f-end" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:#0d0c0c;color:var(--color-bg);display:flex;flex-direction:column;padding:80px 96px;gap:56px;">
+<div style="display:flex;flex-direction:column;gap:12px;"><div style="font-size:30px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">ARRIVALS · GAMETIMEWES</div><div style="font-size:160px;font-weight:800;line-height:.88;letter-spacing:-.045em;text-transform:uppercase;white-space:nowrap;">Thanks for flying</div></div>
+<div style="display:flex;flex-direction:column;border-top:4px solid var(--color-bg);">
+<div style="display:grid;grid-template-columns:1fr 1.2fr 2fr 1.4fr 1.4fr;padding:20px 0;font-size:22px;font-weight:600;letter-spacing:.14em;color:var(--color-neutral-400);border-bottom:4px solid var(--color-neutral-800);"><div>FLIGHT</div><div>FROM</div><div>ARRIVED</div><div>AIRCRAFT</div><div>STATUS</div></div>
+<div style="display:grid;grid-template-columns:1fr 1.2fr 2fr 1.4fr 1.4fr;align-items:center;padding:28px 0;font-size:56px;font-weight:800;border-bottom:4px solid var(--color-neutral-800);"><div>{{ callsign }}</div><div>{{ from }}</div><div style="white-space:nowrap;">{{ toCity }}</div><div>{{ aircraft }}</div><div><span style="background:var(--color-accent);color:#fff;padding:6px 18px;">LANDED</span></div></div>
+</div>
+<div style="margin-top:auto;display:flex;justify-content:space-between;font-size:28px;font-weight:600;letter-spacing:.08em;color:var(--color-neutral-400);"><div>NEXT LEG OF THE TBM TOUR · SAME TIME NEXT WEEK</div><div>@GAMETIMEWES</div></div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:20px;">
+<div style="display:flex;align-items:baseline;gap:16px;border-bottom:2px solid var(--color-neutral-800);padding-bottom:12px;"><div style="font-size:14px;font-weight:600;color:var(--color-accent-400);">03</div><div style="font-size:32px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;">Pro Clubs / gaming pack</div><div style="font-size:15px;color:var(--color-neutral-400);">EA FC and misc gaming</div></div>
+<div style="display:grid;grid-template-columns:repeat(2,768px);gap:40px 32px;">
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Starting soon</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=c-start</div></div>
+<div data-scene="c-start" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:#0d0c0c;display:flex;align-items:center;padding:0 160px;">
+{{ stripeField }}
+<div style="position:relative;background:#0d0c0c;color:var(--color-bg);padding:72px 80px;display:flex;flex-direction:column;gap:32px;width:1280px;">
+<div style="display:flex;justify-content:space-between;font-size:28px;font-weight:600;letter-spacing:.14em;"><div style="color:var(--color-accent-400);">EA FC PRO CLUBS</div><div>GAMETIMEWES</div></div>
+<div style="font-size:200px;font-weight:800;line-height:.88;letter-spacing:-.045em;text-transform:uppercase;">Kick-off soon</div>
+<div style="display:flex;align-items:center;gap:32px;border-top:4px solid var(--color-bg);padding-top:28px;"><div style="background:var(--color-accent);color:#fff;font-size:72px;font-weight:800;padding:4px 24px;font-variant-numeric:tabular-nums;">{{ countdown }}</div><div style="font-size:30px;font-weight:600;letter-spacing:.06em;line-height:1.35;">TikTok · Instagram · YouTube<br>@gametimewes</div></div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Gameplay + webcam</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=c-game</div></div>
+<div data-scene="c-game" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div data-ph-bg="" style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:repeating-linear-gradient(135deg,#444141 0 4px,#605d5d 4px 28px);">
+<div data-ph="" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:ui-monospace,Menlo,monospace;font-size:28px;color:#f3f2f2;background:#0d0c0c;padding:8px 16px;">GAMEPLAY CAPTURE · EA FC</div>
+<div data-ph="" style="position:absolute;right:48px;top:48px;width:640px;height:150px;border:4px dashed #f3f2f2;display:flex;align-items:center;padding:0 24px;font-family:ui-monospace,Menlo,monospace;font-size:22px;color:#f3f2f2;background:#0d0c0c;">ALERT AREA · SEE ALERTS BELOW</div>
+<div style="position:absolute;left:48px;bottom:48px;width:480px;display:flex;flex-direction:column;">
+{{ stripe }}
+<div data-ph="" style="height:270px;background:repeating-linear-gradient(135deg,#2d2b2b 0 4px,#444141 4px 24px);display:flex;align-items:flex-end;padding:16px;font-family:ui-monospace,Menlo,monospace;font-size:22px;color:#f3f2f2;">WEBCAM</div>
+<div style="display:flex;align-items:center;gap:16px;background:#0d0c0c;color:var(--color-bg);padding:14px 20px;font-size:28px;font-weight:800;">{{ pulse }}<span>GAMETIMEWES</span><span style="margin-left:auto;font-size:20px;font-weight:600;letter-spacing:.12em;color:var(--color-accent-400);">PRO CLUBS</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Half-time</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=c-half</div></div>
+<div data-scene="c-half" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:#0d0c0c;color:var(--color-bg);display:grid;grid-template-columns:960px 1fr;">
+<div style="display:flex;flex-direction:column;padding:96px;border-right:4px solid var(--color-bg);">
+<div style="font-size:28px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">EA FC PRO CLUBS · INTERVAL</div>
+<div style="font-size:200px;font-weight:800;line-height:.88;letter-spacing:-.045em;text-transform:uppercase;margin-top:32px;">Half-<br>time</div>
+<div style="margin-top:auto;display:flex;flex-direction:column;gap:12px;border-top:4px solid var(--color-bg);padding-top:28px;"><div style="font-size:24px;font-weight:600;letter-spacing:.14em;color:var(--color-neutral-400);">SECOND HALF IN</div><div style="font-size:120px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;color:var(--color-accent);">{{ countdown }}</div></div>
+</div>
+<div style="position:relative;display:flex;align-items:center;padding:96px;overflow:hidden;">
+{{ stripeField }}
+<div style="position:relative;width:100%;display:flex;flex-direction:column;background:#0d0c0c;">
+<div data-ph="" style="height:432px;background:repeating-linear-gradient(135deg,#2d2b2b 0 4px,#444141 4px 24px);display:flex;align-items:flex-end;padding:16px;font-family:ui-monospace,Menlo,monospace;font-size:22px;color:#f3f2f2;">WEBCAM</div>
+<div style="display:flex;align-items:center;gap:16px;padding:16px 20px;font-size:28px;font-weight:800;">{{ pulse }}<span>GAMETIMEWES</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Be right back</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=c-brb</div></div>
+<div data-scene="c-brb" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:#0d0c0c;display:flex;align-items:center;padding:0 160px;">
+{{ stripeField }}
+<div style="position:relative;background:#0d0c0c;color:var(--color-bg);padding:72px 80px;display:flex;flex-direction:column;gap:32px;width:1280px;">
+<div style="display:flex;justify-content:space-between;font-size:28px;font-weight:600;letter-spacing:.14em;"><div style="color:var(--color-accent-400);">QUICK BREAK</div><div>GAMETIMEWES</div></div>
+<div style="font-size:200px;font-weight:800;line-height:.88;letter-spacing:-.045em;text-transform:uppercase;">Be right back</div>
+<div style="border-top:4px solid var(--color-bg);padding-top:28px;font-size:36px;font-weight:600;color:var(--color-neutral-300);">Back before the next match.</div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Ending</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=c-end</div></div>
+<div data-scene="c-end" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:#0d0c0c;display:flex;align-items:center;padding:0 160px;">
+{{ stripeField }}
+<div style="position:relative;background:#0d0c0c;color:var(--color-bg);padding:72px 80px;display:flex;flex-direction:column;gap:32px;width:1280px;">
+<div style="display:flex;justify-content:space-between;font-size:28px;font-weight:600;letter-spacing:.14em;"><div style="color:var(--color-accent-400);">THANKS FOR WATCHING</div><div>FORZA MILAN</div></div>
+<div style="font-size:200px;font-weight:800;line-height:.88;letter-spacing:-.045em;text-transform:uppercase;">Full time</div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:4px solid var(--color-bg);line-height:1.1;">
+<div style="padding:28px 0;display:flex;flex-direction:column;gap:8px;"><div style="font-size:20px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">TIKTOK</div><div style="font-size:36px;font-weight:800;">@gametimewes</div></div>
+<div style="padding:28px 0;display:flex;flex-direction:column;gap:8px;"><div style="font-size:20px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">INSTAGRAM</div><div style="font-size:36px;font-weight:800;">@gametimewes</div></div>
+<div style="padding:28px 0;display:flex;flex-direction:column;gap:8px;"><div style="font-size:20px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">YOUTUBE</div><div style="font-size:36px;font-weight:800;">@gametimewes</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:20px;">
+<div style="display:flex;align-items:baseline;gap:16px;border-bottom:2px solid var(--color-neutral-800);padding-bottom:12px;"><div style="font-size:14px;font-weight:600;color:var(--color-accent-400);">04</div><div style="font-size:32px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;">Alerts + chat box</div><div style="font-size:15px;color:var(--color-neutral-400);">Shared by both packs, shown at full size · {name} and {amount} are StreamElements / Streamlabs variables</div></div>
+<div style="display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start;">
+
+<div style="display:flex;flex-direction:column;gap:32px;">
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Follow</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=a-follow</div></div>
+<div data-card="a-follow" style="width:640px;background:#0d0c0c;color:var(--color-bg);display:flex;flex-direction:column;">
+{{ stripe }}
+<div style="display:flex;align-items:stretch;">
+<div style="flex:1;display:flex;flex-direction:column;gap:6px;padding:20px 24px 24px;"><div style="font-size:18px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">NEW FOLLOWER</div><div style="font-size:48px;font-weight:800;letter-spacing:-.02em;line-height:1.05;">{name}</div></div>
+<div style="width:156px;flex:none;background:var(--color-text);display:flex;align-items:flex-end;padding:20px;font-size:18px;font-weight:600;letter-spacing:.1em;color:var(--color-neutral-400);">WELCOME</div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Subscriber</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=a-sub</div></div>
+<div data-card="a-sub" style="width:640px;background:var(--color-accent);color:#fff;display:flex;flex-direction:column;">
+<div style="display:flex;align-items:stretch;">
+<div style="flex:1;display:flex;flex-direction:column;gap:6px;padding:24px;"><div style="font-size:18px;font-weight:600;letter-spacing:.14em;">NEW SUBSCRIBER</div><div style="font-size:48px;font-weight:800;letter-spacing:-.02em;line-height:1.05;">{name}</div></div>
+<div style="width:220px;flex:none;background:#0d0c0c;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;padding:20px;"><div style="font-size:32px;font-weight:800;line-height:1;">{amount}</div><div style="font-size:16px;font-weight:600;letter-spacing:.12em;color:var(--color-neutral-400);">MONTHS</div></div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Raid</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=a-raid</div></div>
+<div data-card="a-raid" style="width:640px;position:relative;overflow:hidden;padding:20px;display:flex;">
+{{ stripeField }}
+<div style="position:relative;flex:1;background:#0d0c0c;color:var(--color-bg);display:flex;flex-direction:column;gap:6px;padding:20px 24px 24px;"><div style="font-size:18px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">INCOMING RAID</div><div style="font-size:48px;font-weight:800;letter-spacing:-.02em;line-height:1.05;">{name}</div><div style="font-size:22px;font-weight:600;color:var(--color-neutral-300);">with {amount} raiders</div></div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Chat box</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=chatbox</div></div>
+<div data-card="chatbox" style="width:520px;height:760px;background:var(--color-text);color:var(--color-bg);display:flex;flex-direction:column;">
+{{ stripe }}
+<div style="display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:2px solid var(--color-neutral-800);"><div style="font-size:24px;font-weight:800;letter-spacing:.1em;">CHAT</div><div style="display:flex;align-items:center;gap:12px;font-size:16px;font-weight:600;letter-spacing:.12em;color:var(--color-neutral-400);">{{ pulse }}LIVE</div></div>
+<div data-ph="" style="flex:1;margin:20px;background:repeating-linear-gradient(135deg,#2d2b2b 0 4px,#444141 4px 24px);display:flex;align-items:flex-end;padding:16px;font-family:ui-monospace,Menlo,monospace;font-size:18px;color:#f3f2f2;">CHAT WIDGET</div>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;scene&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;overview&quot;,&quot;options&quot;:[&quot;overview&quot;,&quot;f-start&quot;,&quot;f-game&quot;,&quot;f-cockpit&quot;,&quot;f-chat&quot;,&quot;f-brb&quot;,&quot;f-end&quot;,&quot;c-start&quot;,&quot;c-game&quot;,&quot;c-half&quot;,&quot;c-brb&quot;,&quot;c-end&quot;,&quot;a-follow&quot;,&quot;a-sub&quot;,&quot;a-raid&quot;,&quot;chatbox&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;View&quot;},&quot;motion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;View&quot;},&quot;countdownMinutes&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:5,&quot;min&quot;:1,&quot;max&quot;:30,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;View&quot;},&quot;callsign&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;GTW07&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Flight&quot;},&quot;from&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;KDEN&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Flight&quot;},&quot;to&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;KSLC&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Flight&quot;},&quot;toCity&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Salt Lake City&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Flight&quot;},&quot;aircraft&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;TBM 930&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Flight&quot;},&quot;leg&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;07&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Flight&quot;},&quot;phase&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Cruise&quot;,&quot;options&quot;:[&quot;Boarding&quot;,&quot;Taxi&quot;,&quot;Takeoff&quot;,&quot;Climb&quot;,&quot;Cruise&quot;,&quot;Descent&quot;,&quot;Approach&quot;,&quot;Landed&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Flight&quot;}}">class Component extends DCLogic {
+  state = { left: null };
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      const total = (this.props.countdownMinutes ?? 5) * 60;
+      this.setState(s => ({ left: s.left == null || s.left <= 0 ? total : s.left - 1 }));
+    }, 1000);
+    this.applyScene();
+  }
+  componentDidUpdate() { this.applyScene(); }
+  componentWillUnmount() { clearInterval(this.timer); }
+  applyScene() {
+    const q = new URLSearchParams(location.search).get('scene');
+    const p = this.props.scene && this.props.scene !== 'overview' ? this.props.scene : null;
+    const s = q || p;
+    let el = document.getElementById('gw-obs');
+    if (!s) { if (el) el.remove(); return; }
+    if (!el) { el = document.createElement('style'); el.id = 'gw-obs'; document.head.appendChild(el); }
+    const a = `[data-scene="${s}"],[data-card="${s}"]`;
+    el.textContent = `html,body{background:transparent!important;overflow:hidden!important}#gw-pack{visibility:hidden!important;background:transparent!important}
+${a}{visibility:visible!important;position:fixed!important;left:0!important;top:0!important;z-index:9999;border:0!important}
+[data-scene="${s}"] *,[data-card="${s}"] *{visibility:visible}
+[data-scene="${s}"]{width:1920px!important;height:1080px!important}
+[data-scene="${s}"]>div{transform:none!important}
+${a.split(',').map(x => x + ' [data-ph]').join(',')}{visibility:hidden!important}
+[data-scene="${s}"] [data-ph-bg]{background:transparent!important}`;
+  }
+  renderVals() {
+    const total = (this.props.countdownMinutes ?? 5) * 60;
+    const t = this.state.left ?? total;
+    const countdown = String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
+    const animate = this.props.motion ?? true;
+    const h = React.createElement;
+    const pulse = h('span', { style: { display: 'inline-block', width: 22, height: 22, flex: 'none', background: 'var(--color-accent)', animation: animate ? 'gw-pulse 1.6s ease-in-out infinite' : 'none' } });
+    const stripe = h('div', { style: { height: 14, flex: 'none', background: 'repeating-linear-gradient(90deg,var(--color-accent) 0 30px,#0d0c0c 30px 60px)', animation: animate ? 'gw-drift 3s linear infinite' : 'none' } });
+    const stripeField = h('div', { style: { position: 'absolute', inset: 0, background: 'repeating-linear-gradient(90deg,var(--color-accent) 0 160px,#0d0c0c 160px 320px)', animation: animate ? 'gw-drift-lg 24s linear infinite' : 'none' } });
+    return {
+      countdown, pulse, stripe, stripeField,
+      callsign: this.props.callsign ?? 'GTW07',
+      from: this.props.from ?? 'KDEN',
+      to: this.props.to ?? 'KSLC',
+      toCity: this.props.toCity ?? 'Salt Lake City',
+      aircraft: this.props.aircraft ?? 'TBM 930',
+      leg: this.props.leg ?? '07',
+      phase: (this.props.phase ?? 'Cruise').toUpperCase()
+    };
+  }
+}</script>
+</body>
+</html>

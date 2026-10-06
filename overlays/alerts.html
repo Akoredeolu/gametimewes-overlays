@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gametimewes · Alerts</title>
+<link rel="stylesheet" href="../ds/styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="../lib/overlay.css">
+<style>
+  #slot { position: absolute; right: 48px; top: 48px; display: flex; flex-direction: column; align-items: flex-end; }
+  body.vertical #slot { left: 50%; right: auto; top: 420px; transform: translateX(-50%); align-items: center; }
+  body.pos-left #slot { left: 48px; right: auto; align-items: flex-start; }
+  .alert { width: 640px; animation: gw-in .5s cubic-bezier(.2,.8,.2,1); }
+  .alert.out { transition: opacity .5s, transform .5s; opacity: 0; transform: translateX(24px); }
+  .a-k { font-size: 18px; font-weight: 600; letter-spacing: .14em; }
+  .a-n { font-size: 48px; font-weight: 800; letter-spacing: -.02em; line-height: 1.05; overflow-wrap: anywhere; }
+  .a-m { font-size: 22px; font-weight: 600; color: var(--color-neutral-300); margin-top: 6px; }
+  #status { position: fixed; left: 8px; bottom: 8px; font: 600 12px Archivo, sans-serif; color: #bab6b6; background: #0d0c0c; padding: 4px 8px; }
+  body:not(.preview) #status.ok { display: none; }
+</style>
+</head>
+<body>
+<div id="scaler"><div id="stage"><div id="slot"></div></div></div>
+<div id="status">Alerts: waiting…</div>
+<script type="module">
+import { CONFIG } from '../lib/config.js';
+import { params, hashParams, onEvent, watch } from '../lib/state.js';
+import { bootStage, esc } from '../lib/stage.js';
+import { connectEventSub } from '../lib/twitch-events.js';
+import { goalCard } from './cards.js';
+
+bootStage();
+document.body.classList.toggle('pos-left', params.get('pos') === 'left');
+const slot = document.getElementById('slot'), statusEl = document.getElementById('status');
+const setStatus = (t, ok) => { statusEl.textContent = 'Alerts: ' + t; statusEl.classList.toggle('ok', !!ok); };
+const DURATION = (Number(params.get('duration')) || 7) * 1000;
+const sound = params.get('sound') ? new Audio(params.get('sound')) : null;
+let match = null; watch('match', m => match = m);
+
+const plain = (k, name, side, sideLabel, msg) => `<div class="alert" style="background:#0d0c0c;color:var(--color-bg);display:flex;flex-direction:column;">
+  <div class="stripe"></div><div style="display:flex;align-items:stretch;">
+    <div style="flex:1;display:flex;flex-direction:column;gap:6px;padding:20px 24px 24px;"><div class="a-k acc">${k}</div><div class="a-n">${esc(name)}</div>${msg ? `<div class="a-m">${esc(msg)}</div>` : ''}</div>
+    <div style="width:156px;flex:none;background:var(--color-text);display:flex;flex-direction:column;justify-content:flex-end;gap:4px;padding:20px;">${side != null ? `<div style="font-size:32px;font-weight:800;line-height:1">${esc(side)}</div>` : ''}<div style="font-size:16px;font-weight:600;letter-spacing:.1em;color:var(--color-neutral-400);">${sideLabel}</div></div>
+  </div></div>`;
+const red = (k, name, amount, unit, msg) => `<div class="alert" style="background:var(--color-accent);color:#fff;display:flex;flex-direction:column;"><div style="display:flex;align-items:stretch;">
+    <div style="flex:1;display:flex;flex-direction:column;gap:6px;padding:24px;"><div class="a-k">${k}</div><div class="a-n">${esc(name)}</div>${msg ? `<div class="a-m" style="color:#fff">${esc(msg)}</div>` : ''}</div>
+    <div style="width:220px;flex:none;background:#0d0c0c;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;padding:20px;"><div style="font-size:32px;font-weight:800;line-height:1;">${esc(amount)}</div><div style="font-size:16px;font-weight:600;letter-spacing:.12em;color:var(--color-neutral-400);">${unit}</div></div>
+  </div></div>`;
+const raid = (name, n) => `<div class="alert" style="position:relative;overflow:hidden;padding:20px;display:flex;"><div class="stripe-field"></div>
+  <div style="position:relative;flex:1;background:#0d0c0c;color:var(--color-bg);display:flex;flex-direction:column;gap:6px;padding:20px 24px 24px;"><div class="a-k acc">INCOMING RAID</div><div class="a-n">${esc(name)}</div><div style="font-size:22px;font-weight:600;color:var(--color-neutral-300);">with ${esc(n)} raiders</div></div></div>`;
+
+const TPL = {
+  follow: a => plain('NEW FOLLOWER', a.name, null, 'WELCOME'),
+  sub: a => red('NEW SUBSCRIBER', a.name, a.amount || 1, (a.amount || 1) == 1 ? 'MONTH' : 'MONTHS'),
+  resub: a => red('RESUBSCRIBED', a.name, a.amount, 'MONTHS', a.message),
+  gift: a => red('GIFTED SUBS', a.name, a.amount, a.amount == 1 ? 'GIFT' : 'GIFTS'),
+  cheer: a => plain('CHEER', a.name, a.amount, 'BITS', a.message),
+  raid: a => raid(a.name, a.amount),
+  redeem: a => plain(String(a.message || 'REDEEMED').toUpperCase(), a.name, a.amount, 'POINTS'),
+  goal: a => `<div class="alert" style="width:760px">${goalCard({ ...match, ...a.match }, a.scorer, a.minute)}</div>`,
+};
+
+const queue = []; let busy = false;
+const enabled = new Set((params.get('types') || 'follow,sub,resub,gift,cheer,raid,redeem,goal').split(','));
+function push(a) { if (enabled.has(a.type) && TPL[a.type]) { queue.push(a); next(); } }
+function next() {
+  if (busy || !queue.length) return;
+  busy = true;
+  const a = queue.shift();
+  slot.innerHTML = TPL[a.type](a);
+  sound?.play().catch(() => {});
+  setTimeout(() => {
+    slot.firstElementChild?.classList.add('out');
+    setTimeout(() => { slot.innerHTML = ''; busy = false; next(); }, 550);
+  }, a.type === 'raid' ? DURATION + 3000 : DURATION);
+}
+
+// 1) dashboard test buttons + manual alerts (and goal alerts) via shared state
+onEvent('alert', push);
+// 2) real Twitch events when a token is in the URL hash
+const token = hashParams.get('token');
+if (token && CONFIG.twitchClientId) connectEventSub({ clientId: CONFIG.twitchClientId, token, onAlert: push, onStatus: s => setStatus(s, s === 'connected') });
+else setStatus(token ? 'set twitchClientId in lib/config.js' : 'no Twitch token — dashboard tests only', !token && params.get('preview') !== '1');
+
+if (params.get('demo') === '1') ['follow', 'sub', 'raid', 'cheer', 'gift'].forEach((t, i) => push({ type: t, name: ['NewFan', 'Rossonero22', 'FriendlyStreamer', 'BitsBoss', 'GenerousGuy'][i], amount: [null, 3, 42, 500, 5][i] }));
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "gametimewes-sim-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MSFS SimConnect → WebSocket/Firebase bridge for the Gametimewes overlays",
+  "main": "bridge.js",
+  "scripts": { "start": "node bridge.js" },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "node-simconnect": "^4.2.1",
+    "ws": "^8.18.0"
+  }
+}

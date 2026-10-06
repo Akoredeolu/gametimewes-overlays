@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gametimewes · Watchalong Overlay</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
+<style>
+  :root{ --c1:#0d0c0c; --c2:#ec3013; --ink:#201e1d; --line:#2d2b2b; --txt:#f3f2f2; --sub:#bab6b6; --homeC:#f3f2f2; --awayC:#ec3013;
+    --stripe:repeating-linear-gradient(90deg,#ec3013 0 30px,#0d0c0c 30px 60px); }
+  body.neutral{ --stripe:#ec3013; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;background:transparent;overflow:hidden;
+    font-family:'Archivo',system-ui,sans-serif;color:var(--txt)}
+  @keyframes drift{to{background-position:60px 0}}
+  body:not(.neutral):not(.still) .scorebug::before,body:not(.neutral):not(.still) .slipcard::before,body:not(.neutral):not(.still) .cam::before{animation:drift 3s linear infinite}
+  #panel{position:fixed;top:0;left:0;right:0;z-index:100;background:#161413;border-bottom:2px solid #f3f2f2;
+    padding:12px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:end;color:#f3f2f2;font-size:13px}
+  #panel.hidden{display:none}
+  #panel .f{display:flex;flex-direction:column;gap:4px}
+  #panel label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#ff9783}
+  #panel input,#panel select,#panel textarea{background:#0d0c0c!important;border:2px solid #444141!important;color:#f3f2f2!important;border-radius:0!important;padding:7px 9px;font:inherit}
+  #panel input:focus-visible,#panel select:focus-visible,#panel textarea:focus-visible{outline:2px solid #ec3013;outline-offset:2px}
+  #panel button{cursor:pointer;border:2px solid #ec3013;border-radius:0;padding:8px 14px;font:inherit;font-weight:800;color:#fff;background:#ec3013;text-align:left}
+  #panel button:hover{background:#ff4d2e}
+  #panel button.sec{background:transparent;border-color:#f3f2f2}
+  #panel button.sec:hover{background:#201e1d}
+  #panel .url{flex-basis:100%;font-size:11px;color:#bab6b6;word-break:break-all}
+  #panel .url code{color:#ff9783}
+  #scaler{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+  #stage{position:absolute;top:0;left:0;width:1920px;height:1080px;transform-origin:top left}
+  .scorebug{position:absolute;left:50%;top:28px;transform:translateX(-50%);
+    display:flex;align-items:stretch;min-width:780px;background:var(--c1);padding-top:12px}
+  .scorebug::before{content:"";position:absolute;left:0;right:0;top:0;height:12px;background:var(--stripe)}
+  .comp{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:6px;padding:14px 20px;
+    background:var(--ink);color:var(--txt);min-width:124px}
+  .comp img{height:38px}
+  .comp small{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--sub)}
+  .side{display:flex;align-items:center;gap:14px;padding:0 24px;flex:1}
+  .side.home{justify-content:flex-end} .side.away{justify-content:flex-start}
+  .tname{font-weight:800;font-size:30px;letter-spacing:-.01em;text-transform:uppercase;white-space:nowrap}
+  .tlogo{width:54px;height:54px;object-fit:contain}
+  .score{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 22px;min-width:168px;background:var(--c2);white-space:nowrap}
+  .score .nums{font-size:52px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.02em;line-height:1;white-space:nowrap;color:#fff}
+  .clock{margin-top:6px;font-size:15px;font-weight:800;letter-spacing:.1em;color:#fff;display:flex;align-items:center;gap:8px}
+  .clock .dot{width:10px;height:10px;background:#fff;animation:blink 1.6s infinite}
+  @keyframes blink{50%{opacity:.25}}
+  .brand{position:absolute;left:50%;top:176px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;
+    font-size:16px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--txt);
+    background:var(--ink);padding:10px 20px}
+  .brand .live{color:var(--c2);font-weight:800;display:flex;align-items:center;gap:8px}
+  .brand .live::before{content:"";width:12px;height:12px;background:var(--c2);animation:blink 1.6s infinite}
+  .lineup{position:absolute;top:150px;width:430px;display:flex;flex-direction:column;gap:0}
+  .lineup.home{left:30px} .lineup.away{right:30px}
+  .lu-head{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--c2);color:#fff}
+  .lineup.away .lu-head{flex-direction:row-reverse;text-align:right;background:var(--ink);color:var(--txt);border-top:6px solid var(--c2)}
+  .lu-head img{width:44px;height:44px;object-fit:contain}
+  .lu-head .nm{font-size:22px;font-weight:800;line-height:1.1;text-transform:uppercase;letter-spacing:-.01em}
+  .lu-head .fm{font-size:13px;font-weight:600;letter-spacing:.12em;opacity:.85}
+  .lu-list{display:flex;flex-direction:column;gap:0}
+  .pl{display:flex;align-items:center;gap:12px;padding:8px 14px;background:var(--c1);border-bottom:2px solid var(--line)}
+  .lineup.away .pl{flex-direction:row-reverse;text-align:right}
+  .pl .num{font-size:18px;font-weight:800;color:var(--c2);min-width:30px;font-variant-numeric:tabular-nums}
+  .lineup.away .pl .num{text-align:right}
+  .pl .pn{font-size:19px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pl .ps{font-size:11px;font-weight:600;color:var(--sub);letter-spacing:.12em;margin-left:auto}
+  .lineup.away .pl .ps{margin-left:0;margin-right:auto}
+  .lineup.away .pl .pn{flex:1}
+  .lu-empty{padding:16px;background:var(--c1);font-size:18px;font-weight:800;color:var(--sub)}
+  .bench-title{margin-top:12px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#fff;
+    padding:6px 12px;background:var(--c2);align-self:flex-start}
+  .lineup.away .bench-title{align-self:flex-end}
+  .bench{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+  .lineup.away .bench{justify-content:flex-end}
+  .sub{display:flex;align-items:center;gap:6px;padding:5px 9px;background:var(--c1);font-size:13px;font-weight:600}
+  .sub .sn{color:var(--c2);font-weight:800;font-variant-numeric:tabular-nums}
+  #bottomstack{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);display:flex;flex-direction:column;
+    align-items:center;gap:14px;max-width:1840px}
+  .events{display:flex;flex-direction:column;align-items:flex-start;gap:0}
+  .ev-title{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:var(--c2);padding:6px 14px}
+  .ev-row{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-start}
+  .ev{display:flex;align-items:center;gap:12px;padding:12px 18px;background:var(--c1);border-top:6px solid var(--line);animation:slideUp .4s ease}
+  .ev.ev-home{border-top-color:var(--homeC)}
+  .ev.ev-away{border-top-color:var(--awayC)}
+  .ev .elogo{width:26px;height:26px;object-fit:contain}
+  .ev .ico{font-size:13px;font-weight:800;letter-spacing:.08em;padding:4px 8px;background:var(--ink);color:var(--txt);min-width:52px;text-align:center}
+  .ev .ico.goal{background:var(--c2);color:#fff}
+  .ev .ico.yc{background:#f3f2f2;color:#0d0c0c}
+  .ev .ico.rc{background:var(--c2);color:#fff}
+  .ev .t{font-weight:800;color:var(--txt);font-size:20px;font-variant-numeric:tabular-nums;min-width:44px}
+  .ev .d b{font-weight:800;font-size:19px;display:block;white-space:nowrap}
+  .ev .d small{color:var(--sub);font-size:13px;font-weight:600}
+  @keyframes slideUp{from{transform:translateY(26px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .slips{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:center;max-width:1820px;pointer-events:auto}
+  .slipcard{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:10px;background:var(--c1);padding:22px 16px 14px}
+  .slipcard::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;background:var(--stripe)}
+  .slip-head{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#ff9783}
+  .slip-legs{display:flex;gap:6px;flex-wrap:wrap;max-width:880px}
+  .leg{display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;background:var(--ink);border:2px solid #444141;font-size:15px;font-weight:800;transition:.15s}
+  .leg:hover{border-color:var(--c2)}
+  .leg .st{font-size:13px;width:18px;height:18px;display:flex;align-items:center;justify-content:center;border:2px solid #7d7979;line-height:1}
+  .leg .od{color:#ff9783;font-weight:800;font-variant-numeric:tabular-nums}
+  .leg.won{background:#f3f2f2;color:#0d0c0c;border-color:#f3f2f2}
+  .leg.won .st{border-color:#0d0c0c} .leg.won .od{color:#ae1800}
+  .leg.lost{opacity:.45}
+  .leg.lost .tx{text-decoration:line-through} .leg.lost .st{border-color:var(--c2);color:var(--c2)}
+  .slip-foot{font-size:15px;font-weight:800;display:flex;gap:14px;align-items:center;border-top:2px solid var(--line);padding-top:10px;letter-spacing:.02em}
+  .slip-foot .cashed{background:#f3f2f2;color:#0d0c0c;padding:2px 10px} .slip-foot .busted{background:var(--c2);color:#fff;padding:2px 10px} .slip-foot .ret{color:#ff9783}
+  #goalBanner{position:absolute;left:50%;top:300px;transform:translate(-50%,-50%) translateX(-40px);opacity:0;
+    font-size:132px;font-weight:800;letter-spacing:-.045em;line-height:.9;color:#fff;text-transform:uppercase;
+    background:var(--c2);padding:28px 40px 26px;border-top:14px solid #0d0c0c;
+    transition:.45s cubic-bezier(.2,.8,.2,1);z-index:40}
+  #goalBanner.show{opacity:1;transform:translate(-50%,-50%)}
+  #goalBanner small{display:block;font-size:28px;letter-spacing:.06em;color:#fff;margin-top:14px;font-weight:800}
+  .msg{position:fixed;bottom:14px;left:14px;z-index:90;font-size:12px;color:#bab6b6;background:#0d0c0c;padding:6px 12px}
+  .msg.hidden{display:none}
+  img[src=""],img:not([src]){display:none}
+
+  #cams{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);display:flex;gap:40px;pointer-events:none;z-index:5}
+  .cam{width:600px;aspect-ratio:16/9;border:6px solid var(--c1);border-top-width:18px;position:relative;background:transparent}
+  .cam::before{content:"";position:absolute;left:-6px;right:-6px;top:-18px;height:12px;background:var(--stripe)}
+  .cam .plate{position:absolute;left:-6px;bottom:-46px;white-space:nowrap;background:var(--c1);color:var(--txt);
+    font-weight:800;letter-spacing:.1em;text-transform:uppercase;font-size:20px;padding:8px 18px 8px 14px;display:flex;align-items:center;gap:12px}
+  .cam .plate::before{content:"";width:14px;height:14px;background:var(--c2)}
+
+  /* ---------- vertical 1080x1920 (?layout=vertical) ---------- */
+  body.vertical #stage{width:1080px;height:1920px}
+  body.vertical .scorebug{top:180px;min-width:0;width:1032px}
+  body.vertical .comp{min-width:96px;padding:12px 14px} body.vertical .comp small{display:none}
+  body.vertical .side{padding:0 14px;gap:10px} body.vertical .tname{font-size:24px} body.vertical .tlogo{width:42px;height:42px}
+  body.vertical .score{min-width:150px;padding:12px 16px} body.vertical .score .nums{font-size:46px}
+  body.vertical .brand{top:318px}
+  body.vertical .lineup{top:390px;width:504px} body.vertical .lineup.home{left:24px} body.vertical .lineup.away{right:24px}
+  body.vertical .lu-head .nm{font-size:18px} body.vertical .lu-head img{width:34px;height:34px}
+  body.vertical .pl{padding:6px 10px;gap:8px} body.vertical .pl .pn{font-size:16px} body.vertical .pl .num{font-size:15px;min-width:24px} body.vertical .pl .ps{display:none}
+  body.vertical .sub{font-size:12px;padding:4px 7px}
+  body.vertical #bottomstack{bottom:440px;max-width:1032px;width:1032px}
+  body.vertical .slips{max-width:1032px} body.vertical .slip-legs{max-width:1000px}
+  body.vertical .ev-row{flex-direction:column;gap:4px} body.vertical .ev{width:1032px}
+  body.vertical #goalBanner{top:960px;font-size:120px}
+  body.vertical #cams{top:390px;transform:translateX(-50%);gap:24px}
+  body.vertical .cam{width:500px} body.vertical .cam .plate{font-size:16px}
+  body.vertical.has-cams .lineup{display:none}
+</style>
+</head>
+<body>
+
+<div id="panel">
+  <div class="f"><label>API key</label><input id="key" type="password" style="width:200px"></div>
+  <div class="f"><label>Competition theme</label>
+    <select id="theme">
+      <option value="PL">Premier League</option>
+      <option value="UCL">Champions League</option>
+      <option value="UEL">Europa League</option>
+      <option value="UECL">Conference League</option>
+      <option value="SA">Serie A</option>
+      <option value="LL">La Liga</option>
+      <option value="BL">Bundesliga</option>
+      <option value="WC">World Cup</option>
+      <option value="GEN">Generic (brand colors)</option>
+    </select>
+  </div>
+  <div class="f"><label>Find fixture</label><select id="liveList"><option value="">— search —</option></select></div>
+  <div class="f"><label>or Fixture ID</label><input id="fixtureId" type="number" placeholder="e.g. 1035000" style="width:120px"></div>
+  <div class="f"><label>Style</label><select id="mode"><option value="milan">Rossoneri (Milan)</option><option value="neutral">Neutral</option></select></div>
+  <div class="f"><label>Handle</label><input id="handle" value="Gametimewes" style="width:130px"></div>
+  <div class="f"><label>Custom logo (file/URL)</label><input id="badge" placeholder="e.g. wc-logo.png" style="width:170px"></div>
+  <div class="f"><label>Lineups</label><select id="showLineups"><option value="1">Show</option><option value="0">Hide</option></select></div>
+  <div class="f"><label>Cam 1 (left) name</label><input id="host" value="Gametimewes" style="width:140px"></div>
+  <div class="f"><label>Cam 2 (right) name</label><input id="guest" value="Guest" style="width:140px"></div>
+  <div class="f"><label>Cam frames</label><select id="showCams"><option value="1">Show</option><option value="0">Hide</option></select></div>
+  <button id="findLive" class="sec">Search live</button>
+  <button id="start">Start overlay</button>
+  <button id="hide" class="sec">Hide panel (OBS)</button>
+  <div class="f" style="flex-basis:100%"><label>Bet slips — one leg per line, add "@ odds". Start a new slip with "# Name | stake"</label>
+    <textarea id="slipText" rows="6" placeholder="# Acca 1 | 10&#10;Man City win @ 1.70&#10;Both teams to score @ 1.95&#10;# Banker | 25&#10;Over 1.5 goals @ 1.30" style="background:#1b2236;border:1px solid #2a3450;color:#e8edf7;border-radius:8px;padding:7px 9px;font:inherit;width:100%;resize:vertical"></textarea></div>
+  <div class="f"><label>Default stake</label><input id="slipStake" type="number" step="0.01" placeholder="10" style="width:90px"></div>
+  <div class="f"><label>Currency</label><input id="slipCur" value="$" style="width:60px"></div>
+  <div class="url" id="urlOut"></div>
+</div>
+
+<div id="scaler">
+  <div id="stage">
+    <div id="goalBanner"></div>
+  </div>
+</div>
+<div class="msg" id="msg">Overlay idle — set a fixture and press Start.</div>
+
+<script>
+const API="https://v3.football.api-sports.io";
+const $=id=>document.getElementById(id);
+const qp=new URLSearchParams(location.search);
+
+// ---------- scale the 1920x1080 stage to fill the browser source ----------
+const VERTICAL=qp.get('layout')==='vertical'||qp.get('v')==='1';
+document.body.classList.toggle('vertical',VERTICAL);
+const SW=VERTICAL?1080:1920, SH=VERTICAL?1920:1080;
+function fitStage(){
+  const s=Math.min(window.innerWidth/SW, window.innerHeight/SH);
+  const st=$("stage");
+  st.style.transform=`scale(${s})`;
+  // center if aspect differs
+  st.style.left=((window.innerWidth-SW*s)/2)+"px";
+  st.style.top=((window.innerHeight-SH*s)/2)+"px";
+}
+window.addEventListener('resize',fitStage); fitStage();
+
+// ---------- themes ----------
+const THEMES={
+  PL:{c1:'#3d195b',c2:'#00ff85',label:'Premier League',leagueId:39,badge:'https://media.api-sports.io/football/leagues/39.png'},
+  UCL:{c1:'#06163b',c2:'#3df0ff',label:'Champions League',leagueId:2,badge:'https://media.api-sports.io/football/leagues/2.png'},
+  UEL:{c1:'#1a1100',c2:'#ff7a00',label:'Europa League',leagueId:3,badge:'https://media.api-sports.io/football/leagues/3.png'},
+  UECL:{c1:'#00261c',c2:'#33e88f',label:'Conference Lg',leagueId:848,badge:'https://media.api-sports.io/football/leagues/848.png'},
+  SA:{c1:'#012c6e',c2:'#43d0ff',label:'Serie A',leagueId:135,badge:'https://media.api-sports.io/football/leagues/135.png'},
+  LL:{c1:'#3d0a18',c2:'#ffce3a',label:'La Liga',leagueId:140,badge:'https://media.api-sports.io/football/leagues/140.png'},
+  BL:{c1:'#1a0006',c2:'#ff2e4d',label:'Bundesliga',leagueId:78,badge:'https://media.api-sports.io/football/leagues/78.png'},
+  WC:{c1:'#4a0d12',c2:'#ffd24a',label:'World Cup',leagueId:1,badge:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTgwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmZmYyYjAiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIwLjQiIHN0b3AtY29sb3I9IiNmNmM4M2IiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIwLjciIHN0b3AtY29sb3I9IiNjODkwMWEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOWE2YTEwIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJnZCIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNlMGE5MmEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjN2Q1NDEwIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8IS0tIGdsb2JlIG9uIHRvcCAtLT4KICA8Y2lyY2xlIGN4PSI2MCIgY3k9IjM0IiByPSIyNSIgZmlsbD0idXJsKCNnKSIgc3Ryb2tlPSIjN2Q1NDEwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgogIDxwYXRoIGQ9Ik02MCAxMSBhMjUgMjUgMCAwIDEgMCA0NiBNNDQgMjAgcTE2IDE0IDAgMjggTTc2IDIwIHEtMTYgMTQgMCAyOCBNMzcgMzQgaDQ2IiBmaWxsPSJub25lIiBzdHJva2U9IiNhOTc4MWEiIHN0cm9rZS13aWR0aD0iMS40IiBvcGFjaXR5PSIwLjciLz4KICA8IS0tIHR3aXN0ZWQgYm9keTogdHdvIGFybXMgc3dlZXBpbmcgZG93biAtLT4KICA8cGF0aCBkPSJNNDggNTIgQyAzNCA3OCwgNDAgMTA4LCA1NCAxMjQgQyA1OCAxMjgsIDU4IDEzNCwgNTQgMTM4IEw2NiAxMzggQzYyIDEzNCwgNjIgMTI4LCA2NiAxMjQgQyA4MCAxMDgsIDg2IDc4LCA3MiA1MiBDIDcwIDY0LCA2NiA3MiwgNjAgNzggQyA1NCA3MiwgNTAgNjQsIDQ4IDUyIFoiIGZpbGw9InVybCgjZykiIHN0cm9rZT0iIzdkNTQxMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KICA8cGF0aCBkPSJNNjAgNzggQyA1NiA5NiwgNTYgMTE2LCA2MCAxMzIgQyA2NCAxMTYsIDY0IDk2LCA2MCA3OCBaIiBmaWxsPSJ1cmwoI2dkKSIgb3BhY2l0eT0iMC41NSIvPgogIDwhLS0gY29sbGFyIC0tPgogIDxyZWN0IHg9IjUwIiB5PSIxMzUiIHdpZHRoPSIyMCIgaGVpZ2h0PSI3IiByeD0iMiIgZmlsbD0idXJsKCNnKSIgc3Ryb2tlPSIjN2Q1NDEwIiBzdHJva2Utd2lkdGg9IjEuMiIvPgogIDwhLS0gZ3JlZW4gYmFuZCBiYXNlIC0tPgogIDxwYXRoIGQ9Ik00NCAxNDIgTDc2IDE0MiBMNzggMTU2IEw0MiAxNTYgWiIgZmlsbD0iIzFkOGY1NyIgc3Ryb2tlPSIjMGM2YjNlIiBzdHJva2Utd2lkdGg9IjEuMiIvPgogIDxwYXRoIGQ9Ik00NiAxNDYgaDI4IE00NiAxNTEgaDI4IiBzdHJva2U9IiMzZmJmN2QiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIwLjYiLz4KICA8IS0tIGdvbGQgYmFzZSAtLT4KICA8cGF0aCBkPSJNNDAgMTU2IEw4MCAxNTYgTDg0IDE3MCBMMzYgMTcwIFoiIGZpbGw9InVybCgjZykiIHN0cm9rZT0iIzdkNTQxMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPC9zdmc+Cg=='},
+  GEN:{c1:'#15183a',c2:'#7c5cff',label:'Watchalong',leagueId:null,badge:null}
+};
+function applyTheme(t){
+  const th=THEMES[t]||THEMES.GEN;
+  // Gametimewes brand: colours fixed; competition sets label + badge only
+  return th;
+}
+
+// ---------- state ----------
+// API key: put it in the URL hash (#key=...) so it never lands in the repo or in server logs
+const hp=new URLSearchParams(location.hash.slice(1));
+let KEY=hp.get('key')||qp.get('key')||localStorage.getItem('apisports_key')||'';
+let fixtureId=qp.get('fixture')||'';
+let theme=qp.get('theme')||'PL';
+let handle=qp.get('handle')||'Gametimewes';
+let mode=qp.get('mode')||'milan';
+function applyMode(){ document.body.classList.toggle('neutral', mode==='neutral'); document.body.classList.toggle('still', qp.get('motion')==='0'); }
+applyMode();
+let customBadge=qp.get('badge')||'';
+let showLineups=qp.get('lineups')!=='0';
+let host=qp.get('host')||'Gametimewes';
+let guest=qp.get('guest')||'Guest';
+let showCams=qp.get('cams')==='1';  // 2-cam frames: ?cams=1 (or toggle from the dashboard)
+let timer=null, seenEvents=new Set(), lastScore=null, lineupCache=null, lineupTries=0, lastEvents=[], lastFx=null;
+
+// ----- bet slip state (supports multiple slips) -----
+let slips=[], slipCur=qp.get('cur')||'$', defaultStake=parseFloat(qp.get('stake'))||0;
+try{ if(qp.get('slip')){ const d=JSON.parse(qp.get('slip'));
+  slips=(Array.isArray(d)&&d.length&&d[0]&&d[0].legs)
+    ? d.map(s=>({name:s.name||'',stake:s.stake||0,legs:(s.legs||[]).map(l=>({text:l.text,odds:l.odds,status:'pending'}))}))
+    : [{name:'',stake:defaultStake,legs:d.map(l=>({text:l.text,odds:l.odds,status:'pending'}))}]; // back-compat
+}}catch(e){}
+function slipKey(){ return 'slipStatuses_'+(fixtureId||'x'); }
+function saveSlipStatuses(){ try{ localStorage.setItem(slipKey(), JSON.stringify(slips.map(s=>s.legs.map(l=>l.status)))); }catch(e){} }
+function restoreSlipStatuses(){ if(window.__stateDriven) return; try{ const raw=localStorage.getItem(slipKey()); if(!raw)return; const a=JSON.parse(raw);
+  if(a.length===slips.length) slips.forEach((s,si)=>{ if(a[si]&&a[si].length===s.legs.length) s.legs.forEach((l,li)=>l.status=a[si][li]); });
+}catch(e){} }
+restoreSlipStatuses();
+function parseSlips(text,dStake){
+  const out=[]; let cur=null;
+  text.split('\n').forEach(line=>{
+    const t=line.trim();
+    if(t.startsWith('#')){ const body=t.slice(1).trim(); const p=body.split('|');
+      cur={name:p[0].trim(), stake:p.length>1?(parseFloat(p[1])||dStake):dStake, legs:[]}; out.push(cur); return; }
+    if(!t) return;
+    let odds=null,desc=t; const m=t.match(/@\s*([\d.]+)\s*$/); if(m){odds=parseFloat(m[1]); desc=t.slice(0,m.index).trim();}
+    if(!cur){ cur={name:'',stake:dStake,legs:[]}; out.push(cur); }
+    cur.legs.push({text:desc,odds,status:'pending'});
+  });
+  return out.filter(s=>s.legs.length);
+}
+function slipsToText(){
+  return slips.map((s,i)=>{
+    const head=(slips.length>1||s.name)?`# ${s.name||('Slip '+(i+1))}${s.stake?' | '+s.stake:''}\n`:'';
+    return head+s.legs.map(l=>l.text+(l.odds?' @ '+l.odds:'')).join('\n');
+  }).join('\n');
+}
+
+$("mode").value=mode; $("key").value=KEY; $("theme").value=theme; $("handle").value=handle; $("badge").value=customBadge; $("fixtureId").value=fixtureId; $("showLineups").value=showLineups?'1':'0';
+$("host").value=host; $("guest").value=guest; $("showCams").value=showCams?'1':'0';
+$("slipText").value=slipsToText(); $("slipStake").value=defaultStake||''; $("slipCur").value=slipCur;
+
+
+const DEMO=qp.get('demo')==='1';
+const DEMO_FX={fixture:{id:1,date:new Date().toISOString(),status:{short:'2H',elapsed:67,extra:null}},league:{logo:''},
+  teams:{home:{id:1,name:'AC Milan',logo:'https://media.api-sports.io/football/teams/489.png'},away:{id:2,name:'Opponent',logo:'https://media.api-sports.io/football/teams/505.png'}},goals:{home:2,away:1}};
+const P=(n,name,pos)=>({player:{number:n,name,pos}});
+const DEMO_LU=[{team:{name:'AC Milan',logo:'https://media.api-sports.io/football/teams/489.png'},formation:'4-3-3',startXI:[P(16,'Player One','G'),P(2,'Player Two','D'),P(23,'Player Three','D'),P(46,'Player Four','D'),P(19,'Player Five','D'),P(14,'Player Six','M'),P(29,'Player Seven','M'),P(8,'Player Eight','M'),P(10,'Player Nine','F'),P(9,'Player Ten','F'),P(11,'Player Eleven','F')],substitutes:[P(1,'Sub One'),P(20,'Sub Two'),P(7,'Sub Three')]},
+  {team:{name:'Opponent',logo:'https://media.api-sports.io/football/teams/505.png'},formation:'3-5-2',startXI:[P(1,'Player One','G'),P(3,'Player Two','D'),P(4,'Player Three','D'),P(5,'Player Four','D'),P(2,'Player Five','M'),P(6,'Player Six','M'),P(8,'Player Seven','M'),P(10,'Player Eight','M'),P(7,'Player Nine','M'),P(9,'Player Ten','F'),P(11,'Player Eleven','F')],substitutes:[P(12,'Sub One'),P(14,'Sub Two')]}];
+const DEMO_EV=[{time:{elapsed:12},type:'Goal',detail:'Normal Goal',team:{id:1,name:'AC Milan'},player:{id:1,name:'Player Ten'}},
+  {time:{elapsed:38},type:'Card',detail:'Yellow Card',team:{id:2,name:'Opponent'},player:{id:2,name:'Player Six'}},
+  {time:{elapsed:55},type:'Goal',detail:'Penalty',team:{id:2,name:'Opponent'},player:{id:3,name:'Player Ten'}},
+  {time:{elapsed:66},type:'Goal',detail:'Normal Goal',team:{id:1,name:'AC Milan'},player:{id:4,name:'Player Eleven'}}];
+if(DEMO){ fixtureId=fixtureId||'1'; if(!slips.length) slips=[{name:'Acca 1',stake:10,legs:[{text:'Milan win',odds:1.7,status:'won'},{text:'Both teams to score',odds:1.95,status:'won'},{text:'Over 3.5 goals',odds:2.4,status:'pending'}]}]; }
+async function api(path,params={}){
+  if(DEMO){ return path==='fixtures'?[DEMO_FX]:path==='fixtures/lineups'?DEMO_LU:path==='fixtures/events'?DEMO_EV:[]; }
+  const qs=new URLSearchParams(params).toString();
+  const r=await fetch(`${API}/${path}${qs?'?'+qs:''}`,{headers:{"x-apisports-key":KEY}});
+  if(!r.ok) throw new Error("HTTP "+r.status);
+  const d=await r.json(); return d.response||[];
+}
+function setMsg(t){ const m=$("msg"); if(!t){m.classList.add('hidden');return;} m.classList.remove('hidden'); m.textContent=t; }
+
+// ---------- controls ----------
+$("findLive").onclick=async()=>{
+  KEY=$("key").value.trim(); localStorage.setItem('apisports_key',KEY);
+  const th=THEMES[$("theme").value]; setMsg("Searching live matches…");
+  try{
+    let resp=await api("fixtures", th.leagueId?{live:"all",league:th.leagueId}:{live:"all"});
+    if(!resp.length) resp=await api("fixtures", th.leagueId?{league:th.leagueId,season:new Date().getFullYear(),next:10}:{next:15});
+    $("liveList").innerHTML='<option value="">— pick a match —</option>'+resp.map(fx=>
+      `<option value="${fx.fixture.id}">${fx.teams.home.name} v ${fx.teams.away.name} (${fx.fixture.status.short})</option>`).join('');
+    setMsg(resp.length?`Found ${resp.length} matches — pick one.`:"No matches found.");
+  }catch(e){ setMsg("⚠️ "+e.message); }
+};
+$("liveList").onchange=e=>{ if(e.target.value)$("fixtureId").value=e.target.value; };
+$("start").onclick=()=>{
+  KEY=$("key").value.trim(); localStorage.setItem('apisports_key',KEY);
+  fixtureId=$("fixtureId").value.trim(); theme=$("theme").value; handle=$("handle").value.trim(); mode=$("mode").value; applyMode(); customBadge=$("badge").value.trim(); showLineups=$("showLineups").value==='1';
+  host=$("host").value.trim(); guest=$("guest").value.trim(); showCams=$("showCams").value==='1';
+  defaultStake=parseFloat($("slipStake").value)||0; slipCur=$("slipCur").value.trim()||'$';
+  const newSlips=parseSlips($("slipText").value, defaultStake);
+  // keep statuses where slip name + leg text are unchanged
+  newSlips.forEach(ns=>{ const prev=slips.find(o=>o.name===ns.name); if(prev) ns.legs.forEach(nl=>{ const pl=prev.legs.find(o=>o.text===nl.text); if(pl)nl.status=pl.status; }); });
+  slips=newSlips;
+  if(!fixtureId)return setMsg("Enter a fixture ID or pick from live search.");
+  buildUrl(); start();
+};
+$("hide").onclick=()=>$("panel").classList.add("hidden");
+function buildUrl(){
+  const u=new URL(location.href.split('?')[0]);
+  u.searchParams.set('fixture',fixtureId); u.searchParams.set('theme',theme);
+  u.searchParams.set('handle',handle); u.searchParams.set('mode',mode); u.searchParams.set('lineups',showLineups?'1':'0'); u.searchParams.set('obs','1');
+  if(customBadge) u.searchParams.set('badge',customBadge); else u.searchParams.delete('badge');
+  u.searchParams.set('host',host); u.searchParams.set('guest',guest); u.searchParams.set('cams',showCams?'1':'0');
+  if(slips.length){ u.searchParams.set('slip', JSON.stringify(slips.map(s=>({name:s.name,stake:s.stake,legs:s.legs.map(l=>({text:l.text,odds:l.odds}))})))); u.searchParams.set('stake',defaultStake); u.searchParams.set('cur',slipCur); }
+  else { u.searchParams.delete('slip'); u.searchParams.delete('stake'); u.searchParams.delete('cur'); }
+  if(VERTICAL) u.searchParams.set('layout','vertical');
+  if(KEY) u.hash='key='+encodeURIComponent(KEY);
+  $("urlOut").innerHTML=`OBS browser-source URL (set Width ${SW}, Height ${SH}): <code>${u.href}</code>`;
+}
+
+// ---------- rendering ----------
+function el(html){ const d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstElementChild; }
+function clearStage(){ // keep goalBanner + cam frames
+  [...$("stage").children].forEach(c=>{ if(c.id!=='goalBanner' && c.id!=='cams') c.remove(); });
+}
+function renderCams(){
+  const old=$("cams"); if(old)old.remove();
+  document.body.classList.toggle('has-cams',showCams);
+  if(!showCams) return;
+  const node=el(`<div id="cams">
+      <div class="cam"><div class="plate">${host||'Cam 1'}</div></div>
+      <div class="cam"><div class="plate">${guest||'Cam 2'}</div></div>
+    </div>`);
+  $("stage").appendChild(node);
+}
+
+function scorebugHtml(fx,th){
+  const live=["1H","2H","ET","P","HT","BT","LIVE"].includes(fx.fixture.status.short);
+  const clock = live
+    ? `<span class="clock"><span class="dot"></span>${fx.fixture.status.short==='HT'?'HALF TIME':(fx.fixture.status.elapsed||0)+"'"+(fx.fixture.status.extra?'+'+fx.fixture.status.extra:'')}</span>`
+    : (fx.fixture.status.short==='FT'?`<span class="clock">FULL TIME</span>`:`<span class="clock">${new Date(fx.fixture.date).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span>`);
+  const badge=customBadge||th.badge||(fx.league&&fx.league.logo)||'';
+  const bigBadge=customBadge||theme==='WC';
+  const compStyle=customBadge?' style="background:linear-gradient(180deg,#0b0b12,#1a1a24)"':'';
+  const badgeStyle=bigBadge?' style="height:64px"':'';
+  return `<div class="scorebug">
+      <div class="comp"${compStyle}>${badge?`<img src="${badge}"${badgeStyle} alt="">`:''}<small>${th.label}</small></div>
+      <div class="side home"><span class="tname">${fx.teams.home.name}</span><img class="tlogo" src="${fx.teams.home.logo}" alt=""></div>
+      <div class="score"><div class="nums">${fx.goals.home==null?0:fx.goals.home} - ${fx.goals.away==null?0:fx.goals.away}</div>${clock}</div>
+      <div class="side away"><img class="tlogo" src="${fx.teams.away.logo}" alt=""><span class="tname">${fx.teams.away.name}</span></div>
+    </div>
+    <div class="brand"><span class="live">LIVE</span> ${handle} · Watchalong</div>`;
+}
+
+function lineupHtml(team,sideClass){
+  if(!team){ return `<div class="lineup ${sideClass}"><div class="lu-empty">Lineup not yet available</div></div>`; }
+  const head=`<div class="lu-head"><img src="${team.team.logo}" alt=""><div><div class="nm">${team.team.name}</div><div class="fm">${team.formation||''}</div></div></div>`;
+  const rows=(team.startXI||[]).map(p=>{
+    const pl=p.player||{};
+    return `<div class="pl"><span class="num">${pl.number!=null?pl.number:'–'}</span>
+      <span class="pn">${pl.name||''}</span><span class="ps">${pl.pos||''}</span></div>`;
+  }).join('');
+  const subs=(team.substitutes||[]).map(p=>{
+    const pl=p.player||{};
+    return `<span class="sub"><span class="sn">${pl.number!=null?pl.number:'–'}</span> ${pl.name||''}</span>`;
+  }).join('');
+  const bench=subs?`<div class="bench-title">Bench</div><div class="bench">${subs}</div>`:'';
+  return `<div class="lineup ${sideClass}">${head}<div class="lu-list">${rows}</div>${bench}</div>`;
+}
+
+function eventIcon(ev){
+  const t=(ev.type||'').toLowerCase(), d=(ev.detail||'').toLowerCase();
+  if(t==='goal') return d.includes('own')?'OG':d.includes('penalty')?'PEN':'GOAL';
+  if(t==='card') return d.includes('red')?'RED':'YEL';
+  if(t==='subst') return 'SUB';
+  if(t==='var') return 'VAR';
+  return '•';
+}
+function eventsHtml(events,fx){
+  if(!events.length) return '';
+  const homeId=fx&&fx.teams.home.id, awayId=fx&&fx.teams.away.id;
+  const recent=events.slice(-4).reverse();
+  return `<div class="events"><div class="ev-title">Match Events</div><div class="ev-row">`+
+    recent.map(ev=>{
+      const side=ev.team&&ev.team.id===homeId?'ev-home':(ev.team&&ev.team.id===awayId?'ev-away':'');
+      return `<div class="ev ${side}">${ev.team&&ev.team.logo?`<img class="elogo" src="${ev.team.logo}" alt="">`:''}<span class="ico ${({GOAL:'goal',PEN:'goal',OG:'goal',RED:'rc',YEL:'yc'})[eventIcon(ev)]||''}">${eventIcon(ev)}</span>
+      <span class="t">${ev.time.elapsed}${ev.time.extra?'+'+ev.time.extra:''}'</span>
+      <span class="d"><b>${ev.player&&ev.player.name?ev.player.name:(ev.type||'')}</b><small>${ev.detail||''} · ${ev.team?ev.team.name:''}</small></span></div>`;
+    }).join('')+
+    `</div></div>`;
+}
+function goalBanner(ev){
+  const b=$("goalBanner");
+  b.innerHTML=`GOAL!<small>${ev.player&&ev.player.name?ev.player.name:''} ${ev.time.elapsed}' · ${ev.team.name}</small>`;
+  b.classList.add('show'); setTimeout(()=>b.classList.remove('show'),4500);
+}
+
+// ---------- bet slips ----------
+const STATUS_ICON={pending:'',won:'✓',lost:'✕'};
+function slipCard(s,si){
+  const won=s.legs.filter(l=>l.status==='won').length;
+  const anyLost=s.legs.some(l=>l.status==='lost');
+  const allWon=s.legs.length>0 && s.legs.every(l=>l.status==='won');
+  const haveAll=s.legs.every(l=>l.odds);
+  const totalOdds=haveAll?s.legs.reduce((p,l)=>p*l.odds,1):null;
+  const ret=(totalOdds!=null&&s.stake)?s.stake*totalOdds:null;
+  const legsHtml=s.legs.map((l,i)=>`<div class="leg ${l.status}" data-s="${si}" data-i="${i}" title="click to tick">
+      <span class="st">${STATUS_ICON[l.status]}</span>
+      <span class="tx">${l.text}</span>${l.odds?`<span class="od">${l.odds.toFixed(2)}</span>`:''}
+    </div>`).join('');
+  let foot;
+  if(anyLost) foot=`<span class="busted">BUSTED</span>`;
+  else if(allWon) foot=`<span class="cashed">CASHED${ret!=null?` · ${slipCur}${ret.toFixed(2)}`:''}</span>`;
+  else foot=`<span>${won}/${s.legs.length} in</span>`
+        +(totalOdds!=null?`<span class="ret">@ ${totalOdds.toFixed(2)}</span>`:'')
+        +(ret!=null?`<span>${slipCur}${s.stake} → <span class="ret">${slipCur}${ret.toFixed(2)}</span></span>`:'');
+  const name=s.name || (slips.length>1?('Slip '+(si+1)):(handle+' Bet Slip'));
+  return el(`<div class="slipcard">
+      <div class="slip-head">${name}</div>
+      <div class="slip-legs">${legsHtml}</div>
+      <div class="slip-foot">${foot}</div>
+    </div>`);
+}
+// slips on top, match events beneath — one bottom-anchored stack, no overlap
+function renderBottom(){
+  const old=$("bottomstack"); if(old)old.remove();
+  const hasEvents=lastEvents&&lastEvents.length;
+  if(!slips.length && !hasEvents) return;
+  const cont=el('<div id="bottomstack"></div>');
+  if(slips.length){
+    const sc=el('<div class="slips" id="slips"></div>');
+    slips.forEach((s,si)=>sc.appendChild(slipCard(s,si)));
+    sc.querySelectorAll('.leg').forEach(elm=>elm.addEventListener('click',()=>cycleLeg(parseInt(elm.dataset.s),parseInt(elm.dataset.i))));
+    cont.appendChild(sc);
+  }
+  if(hasEvents){ const ev=eventsHtml(lastEvents,lastFx); if(ev) cont.appendChild(el(ev)); }
+  $("stage").appendChild(cont);
+}
+function cycleLeg(si,i){
+  const order=['pending','won','lost'];
+  const l=slips[si].legs[i];
+  l.status=order[(order.indexOf(l.status)+1)%3];
+  saveSlipStatuses();
+  renderBottom();
+}
+
+// ---------- polling ----------
+async function tick(){
+  try{
+    const fxArr=await api("fixtures",{id:fixtureId});
+    if(!fxArr.length){ setMsg("Fixture not found — check the ID."); return; }
+    const fx=fxArr[0]; const th=applyTheme(theme);
+
+    // lineups: fetch once, then retry every few ticks until populated (they appear ~40 min pre-KO)
+    if(showLineups){
+      if(!lineupCache && lineupTries<60){ lineupTries++;
+        try{ const lu=await api("fixtures/lineups",{fixture:fixtureId}); if(lu&&lu.length) lineupCache=lu; }catch(e){}
+      }
+    }
+    let events=[];
+    try{ events=await api("fixtures/events",{fixture:fixtureId}); }catch(e){}
+
+    // render
+    clearStage();
+    const frag=document.createElement('div'); frag.innerHTML=scorebugHtml(fx,th);
+    [...frag.children].forEach(c=>$("stage").appendChild(c));
+    if(showLineups){
+      const home=lineupCache?lineupCache[0]:null, away=lineupCache?lineupCache[1]:null;
+      $("stage").appendChild(el(lineupHtml(home,'home')));
+      $("stage").appendChild(el(lineupHtml(away,'away')));
+    }
+    lastEvents=events; lastFx=fx;
+    renderBottom();
+    setMsg(null);
+
+    // new-goal banner
+    events.forEach(ev=>{
+      const id=`${ev.time.elapsed}-${ev.time.extra||0}-${ev.type}-${ev.detail}-${ev.player&&ev.player.id}`;
+      if(!seenEvents.has(id)){ seenEvents.add(id);
+        if(lastScore!==null && (ev.type||'').toLowerCase()==='goal') goalBanner(ev);
+      }
+    });
+    lastScore=`${fx.goals.home}-${fx.goals.away}`;
+
+    if(["FT","AET","PEN"].includes(fx.fixture.status.short)){ clearInterval(timer); timer=null; }
+  }catch(e){ setMsg("⚠️ "+e.message); }
+}
+function start(){
+  if(!fixtureId)return;
+  seenEvents=new Set(); lastScore=null; lineupCache=null; lineupTries=0;
+  restoreSlipStatuses();
+  applyTheme(theme);
+  renderCams();
+  if(timer)clearInterval(timer);
+  tick(); timer=setInterval(tick,15000);
+}
+
+// ---------- boot ----------
+applyTheme(theme);
+renderCams();
+if(qp.get('obs')==='1') $("panel").classList.add("hidden");
+if(fixtureId) start();
+
+// ---------- live control from the dashboard (when the URL has no ?fixture=) ----------
+window.gtwApplyState=function(st){
+  if(qp.get('fixture')||DEMO) return; // explicit URL (or demo) wins
+  window.__stateDriven=true;
+  const changed=String(st.fixtureId||'')!==String(fixtureId);
+  theme=st.theme||theme; mode=st.mode||mode; handle=st.handle||handle; customBadge=st.badge||'';
+  showLineups=st.lineups!==false; showCams=!!st.cams; host=st.host||host; guest=st.guest||guest; slipCur=st.cur||slipCur;
+  slips=(st.slips||[]).map(s=>({name:s.name||'',stake:s.stake||0,legs:(s.legs||[]).map(l=>({text:l.text,odds:l.odds,status:l.status||'pending'}))}));
+  applyMode(); renderCams();
+  fixtureId=String(st.fixtureId||'');
+  if(!fixtureId){ if(timer){clearInterval(timer);timer=null;} clearStage(); renderBottom(); setMsg(qp.get('obs')==='1'?null:'Waiting for a fixture from the dashboard…'); return; }
+  if(changed) start(); else renderBottom();
+};
+</script>
+<script type="module">
+import { watch } from '../lib/state.js';
+const qp=new URLSearchParams(location.search);
+if(!qp.get('fixture') && qp.get('demo')!=='1') watch('watchalong', st=>window.gtwApplyState(st));
+</script>
+</body>
+</html>

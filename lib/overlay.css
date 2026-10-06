@@ -1,0 +1,48 @@
+/* Shared base for every overlay page. Tokens come from ds/styles.css (Modernist / Rossoneri). */
+:root { --ink0: #0d0c0c; --stripe: repeating-linear-gradient(90deg, var(--color-accent) 0 30px, #0d0c0c 30px 60px);
+  --stripe-field: repeating-linear-gradient(90deg, var(--color-accent) 0 160px, #0d0c0c 160px 320px); }
+body.neutral { --stripe: var(--color-accent);
+  --stripe-field: repeating-linear-gradient(90deg, transparent 0 316px, rgba(255,255,255,.18) 316px 320px) var(--color-accent); }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; background: transparent !important; overflow: hidden; font-family: "Archivo", system-ui, sans-serif; color: var(--color-bg); }
+
+/* fixed-size stage scaled to the browser source */
+#scaler { position: fixed; inset: 0; overflow: hidden; }
+#stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+body.vertical #stage { width: 1080px; height: 1920px; }
+
+@keyframes gw-pulse { 0%, 100% { opacity: 1 } 50% { opacity: .25 } }
+@keyframes gw-drift { to { background-position: 60px 0 } }
+@keyframes gw-drift-lg { to { background-position: 320px 0 } }
+@keyframes gw-in { from { transform: translateX(-24px); opacity: 0 } to { transform: none; opacity: 1 } }
+@keyframes gw-up { from { transform: translateY(24px); opacity: 0 } to { transform: none; opacity: 1 } }
+
+.stripe { height: 14px; flex: none; background: var(--stripe); animation: gw-drift 3s linear infinite; }
+.stripe-field { position: absolute; inset: 0; background: var(--stripe-field); animation: gw-drift-lg 24s linear infinite; }
+.pulse { display: inline-block; width: 22px; height: 22px; flex: none; background: var(--color-accent); animation: gw-pulse 1.6s ease-in-out infinite; }
+body.neutral .stripe { animation: none; }
+body.still .stripe, body.still .stripe-field, body.still .pulse { animation: none !important; }
+
+.num { font-variant-numeric: tabular-nums; }
+.lbl { font-weight: 600; letter-spacing: .14em; color: var(--color-neutral-400); }
+.acc { color: var(--color-accent-400); }
+
+/* placeholders (gameplay / webcam) are invisible on air; ?preview=1 shows them */
+.ph { visibility: hidden; }
+body.preview .ph { visibility: visible; background: repeating-linear-gradient(135deg, #2d2b2b 0 4px, #444141 4px 24px); display: flex; align-items: flex-end; padding: 16px; font-family: ui-monospace, Menlo, monospace; font-size: 22px; color: #f3f2f2; }
+body.preview .ph-bg { background: repeating-linear-gradient(135deg, #444141 0 4px, #605d5d 4px 28px); }
+body.preview.safe #stage::after { content: ""; position: absolute; left: 0; right: 140px; top: 180px; bottom: 420px; outline: 3px dashed rgba(61,240,255,.8); pointer-events: none; }
+
+/* chat list (overlays/chat.html + scenes that embed chat) */
+.chat-list { display: flex; flex-direction: column; justify-content: flex-end; gap: 0; overflow: hidden; height: 100%; }
+.chat-msg { padding: 12px 0; border-bottom: 2px solid var(--color-neutral-800); animation: gw-up .35s ease; }
+.chat-who { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--color-accent-400); }
+.chat-badge { font-size: 13px; letter-spacing: .12em; padding: 2px 6px; background: var(--color-accent); color: #fff; }
+.is-host .chat-badge { background: var(--color-bg); color: var(--color-text); }
+.chat-text { margin-top: 4px; font-size: 24px; font-weight: 600; line-height: 1.3; color: var(--color-bg); overflow-wrap: anywhere; }
+.is-action .chat-text { font-style: italic; color: var(--color-neutral-300); }
+.chat-text .emote { height: 1.4em; vertical-align: middle; }
+.chat-out { opacity: 0; transition: opacity .6s; }
+
+.hidden { display: none !important; }

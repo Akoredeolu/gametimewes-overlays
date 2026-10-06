@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="_ds/modernist-20a95c74-c408-4909-9c9e-e96d1fc16f57/styles.css">
+<script src="_ds/modernist-20a95c74-c408-4909-9c9e-e96d1fc16f57/_ds_bundle.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
+<style>
+body{margin:0;background:#0d0c0c;font-family:"Archivo",system-ui,sans-serif}
+a{color:#ff9783}a:hover{color:#ec3013}
+@keyframes gw-pulse{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes gw-drift{to{background-position:60px 0}}
+@keyframes gw-drift-lg{to{background-position:320px 0}}
+@keyframes gw-goal{0%{transform:translateX(-24px);opacity:0}12%{transform:none;opacity:1}100%{transform:none;opacity:1}}
+</style>
+</helmet>
+<div id="gw-pack" style="display:flex;flex-direction:column;gap:72px;padding:72px;background:#161413;color:var(--color-bg);width:1720px;">
+
+<div style="display:flex;flex-direction:column;gap:16px;border-bottom:2px solid var(--color-bg);padding-bottom:28px;">
+<div style="height:14px;width:240px;background:repeating-linear-gradient(90deg,var(--color-accent) 0 30px,#0d0c0c 30px 60px);"></div>
+<div style="font-size:64px;font-weight:800;letter-spacing:-.03em;line-height:1;text-transform:uppercase;">Gametimewes · Watchalong pack</div>
+<div style="font-size:18px;line-height:1.5;color:var(--color-neutral-300);max-width:1100px;text-wrap:pretty;">Matchday scenes in the Rossoneri style. Set the Mode tweak to Neutral for non-Milan games: the red and black stripes become solid brand red and "Forza Milan" becomes "Watchalong". Teams, score, minute and lineups are Tweaks. No match footage is shown, so each live scene is webcam and chat around the scorebar. In OBS, add this file as a Browser Source at 1920×1080 with the scene id appended, e.g. <span style="font-family:ui-monospace,Menlo,monospace;color:var(--color-accent-400);">?scene=w-live</span>.</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:20px;">
+<div style="display:flex;align-items:baseline;gap:16px;border-bottom:2px solid var(--color-neutral-800);padding-bottom:12px;"><div style="font-size:14px;font-weight:600;color:var(--color-accent-400);">05</div><div style="font-size:32px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;">Watchalong scenes</div><div style="font-size:15px;color:var(--color-neutral-400);">1920×1080 shown at 40%</div></div>
+<div style="display:grid;grid-template-columns:repeat(2,768px);gap:40px 32px;">
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Pre-match</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=w-start</div></div>
+<div data-scene="w-start" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:#0d0c0c;color:var(--color-bg);display:flex;flex-direction:column;padding:80px 96px;">
+<div style="display:flex;justify-content:space-between;font-size:30px;font-weight:600;letter-spacing:.14em;"><div style="color:var(--color-accent-400);">{{ competitionU }} · WATCHALONG</div><div>@GAMETIMEWES</div></div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:end;gap:48px;margin-top:auto;">
+<div style="font-size:150px;font-weight:800;line-height:.9;letter-spacing:-.045em;text-transform:uppercase;">{{ home }}</div>
+<div style="font-size:48px;font-weight:600;color:var(--color-neutral-400);padding-bottom:20px;">v</div>
+<div style="font-size:150px;font-weight:800;line-height:.9;letter-spacing:-.045em;text-transform:uppercase;text-align:right;">{{ away }}</div>
+</div>
+<div style="margin-top:72px;border-top:4px solid var(--color-bg);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));line-height:1.1;">
+<div style="padding:32px 0;display:flex;flex-direction:column;gap:10px;"><div style="font-size:22px;font-weight:600;letter-spacing:.14em;color:var(--color-neutral-400);">KICK-OFF IN</div><div style="font-size:96px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--color-accent);">{{ countdown }}</div></div>
+<div style="padding:32px 0;display:flex;flex-direction:column;gap:10px;"><div style="font-size:22px;font-weight:600;letter-spacing:.14em;color:var(--color-neutral-400);">PREDICT THE SCORE</div><div style="font-size:48px;font-weight:800;">Type !predict in chat</div></div>
+<div style="padding:32px 0;display:flex;flex-direction:column;gap:10px;"><div style="font-size:22px;font-weight:600;letter-spacing:.14em;color:var(--color-neutral-400);">RULE 03</div><div style="font-size:48px;font-weight:800;">No score spoilers</div></div>
+</div>
+</div>
+{{ stripeBottom }}
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Live match</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=w-live</div></div>
+<div data-scene="w-live" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:#0d0c0c;color:var(--color-bg);display:grid;grid-template-columns:minmax(0,1fr) 520px;grid-template-rows:auto minmax(0,1fr);gap:32px;padding:48px;">
+<div style="grid-column:1 / -1;display:flex;align-items:stretch;line-height:1;">
+<div style="display:flex;align-items:center;gap:16px;background:var(--color-text);padding:0 28px;font-size:22px;font-weight:600;letter-spacing:.14em;">{{ pulse }}{{ competitionU }}</div>
+<div style="display:flex;align-items:center;padding:22px 32px;font-size:56px;font-weight:800;background:var(--color-bg);color:var(--color-text);">{{ homeShortU }}</div>
+<div style="display:flex;align-items:center;padding:22px 32px;font-size:56px;font-weight:800;background:var(--color-accent);color:#fff;font-variant-numeric:tabular-nums;">{{ homeScore }}–{{ awayScore }}</div>
+<div style="display:flex;align-items:center;padding:22px 32px;font-size:56px;font-weight:800;background:var(--color-bg);color:var(--color-text);">{{ awayShortU }}</div>
+<div style="display:flex;align-items:center;padding:0 28px;font-size:40px;font-weight:800;background:var(--color-text);font-variant-numeric:tabular-nums;">{{ minute }}′</div>
+<div style="margin-left:auto;display:flex;align-items:center;font-size:24px;font-weight:600;letter-spacing:.12em;color:var(--color-neutral-400);">@GAMETIMEWES</div>
+</div>
+<div style="display:flex;flex-direction:column;min-height:0;">
+{{ stripe }}
+<div data-ph="" style="flex:1;background:repeating-linear-gradient(135deg,#2d2b2b 0 4px,#444141 4px 24px);display:flex;align-items:flex-end;padding:20px;font-family:ui-monospace,Menlo,monospace;font-size:26px;color:#f3f2f2;">WEBCAM</div>
+<div style="display:flex;align-items:center;gap:16px;background:var(--color-text);padding:16px 24px;font-size:28px;font-weight:800;"><span>GAMETIMEWES</span><span style="margin-left:auto;font-size:20px;font-weight:600;letter-spacing:.12em;color:var(--color-accent-400);">{{ tagline }}</span></div>
+</div>
+<div style="display:flex;flex-direction:column;background:var(--color-text);min-height:0;">
+{{ stripe }}
+<div style="padding:18px 24px;font-size:24px;font-weight:800;letter-spacing:.1em;border-bottom:2px solid var(--color-neutral-800);">CHAT</div>
+<div data-ph="" style="flex:1;margin:20px;background:repeating-linear-gradient(135deg,#2d2b2b 0 4px,#444141 4px 24px);display:flex;align-items:flex-end;padding:16px;font-family:ui-monospace,Menlo,monospace;font-size:20px;color:#f3f2f2;">CHAT WIDGET</div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Lineups</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=w-lineups</div></div>
+<div data-scene="w-lineups" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:#0d0c0c;color:var(--color-bg);display:flex;flex-direction:column;padding:64px 96px;">
+<div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:4px solid var(--color-bg);padding-bottom:24px;"><div style="font-size:96px;font-weight:800;line-height:.9;letter-spacing:-.04em;text-transform:uppercase;">Lineups</div><div style="font-size:26px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">{{ competitionU }} · {{ homeShortU }} v {{ awayShortU }}</div></div>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:96px;margin-top:32px;">
+<div style="display:flex;flex-direction:column;">
+<div style="display:flex;justify-content:space-between;align-items:center;background:var(--color-accent);color:#fff;padding:12px 20px;font-size:32px;font-weight:800;text-transform:uppercase;"><span>{{ home }}</span><span style="font-size:22px;font-weight:600;letter-spacing:.1em;">{{ homeFormation }}</span></div>
+<sc-for list="{{ homeXI }}" as="p" hint-placeholder-count="11"><div style="display:flex;gap:20px;padding:10px 20px;font-size:32px;font-weight:800;border-bottom:2px solid var(--color-neutral-800);line-height:1.1;"><span style="width:40px;color:var(--color-neutral-500);font-variant-numeric:tabular-nums;">{{ p.n }}</span><span>{{ p.name }}</span></div></sc-for>
+</div>
+<div style="display:flex;flex-direction:column;">
+<div style="display:flex;justify-content:space-between;align-items:center;background:var(--color-text);padding:12px 20px;font-size:32px;font-weight:800;text-transform:uppercase;"><span>{{ away }}</span><span style="font-size:22px;font-weight:600;letter-spacing:.1em;color:var(--color-neutral-400);">{{ awayFormation }}</span></div>
+<sc-for list="{{ awayXI }}" as="p" hint-placeholder-count="11"><div style="display:flex;gap:20px;padding:10px 20px;font-size:32px;font-weight:800;border-bottom:2px solid var(--color-neutral-800);line-height:1.1;"><span style="width:40px;color:var(--color-neutral-500);font-variant-numeric:tabular-nums;">{{ p.n }}</span><span>{{ p.name }}</span></div></sc-for>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Half-time</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=w-half</div></div>
+<div data-scene="w-half" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:#0d0c0c;color:var(--color-bg);display:grid;grid-template-columns:960px 1fr;">
+<div style="display:flex;flex-direction:column;padding:96px;border-right:4px solid var(--color-bg);">
+<div style="font-size:28px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">{{ competitionU }} · WATCHALONG</div>
+<div style="font-size:200px;font-weight:800;line-height:.88;letter-spacing:-.045em;text-transform:uppercase;margin-top:32px;">Half-<br>time</div>
+<div style="margin-top:auto;display:flex;align-items:stretch;line-height:1;">
+<div style="padding:20px 28px;font-size:64px;font-weight:800;background:var(--color-bg);color:var(--color-text);">{{ homeShortU }}</div>
+<div style="padding:20px 28px;font-size:64px;font-weight:800;background:var(--color-accent);color:#fff;font-variant-numeric:tabular-nums;">{{ homeScore }}–{{ awayScore }}</div>
+<div style="padding:20px 28px;font-size:64px;font-weight:800;background:var(--color-bg);color:var(--color-text);">{{ awayShortU }}</div>
+</div>
+</div>
+<div style="position:relative;display:flex;align-items:center;padding:96px;overflow:hidden;">
+{{ stripeField }}
+<div style="position:relative;width:100%;display:flex;flex-direction:column;background:#0d0c0c;">
+<div data-ph="" style="height:432px;background:repeating-linear-gradient(135deg,#2d2b2b 0 4px,#444141 4px 24px);display:flex;align-items:flex-end;padding:16px;font-family:ui-monospace,Menlo,monospace;font-size:22px;color:#f3f2f2;">WEBCAM</div>
+<div style="display:flex;align-items:center;gap:16px;padding:16px 20px;font-size:28px;font-weight:800;">{{ pulse }}<span>SECOND HALF IN</span><span style="margin-left:auto;color:var(--color-accent);font-variant-numeric:tabular-nums;">{{ countdown }}</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Full-time</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=w-end</div></div>
+<div data-scene="w-end" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:#0d0c0c;display:flex;align-items:center;padding:0 160px;">
+{{ stripeField }}
+<div style="position:relative;background:#0d0c0c;color:var(--color-bg);padding:72px 80px;display:flex;flex-direction:column;gap:40px;width:1280px;">
+<div style="display:flex;justify-content:space-between;font-size:28px;font-weight:600;letter-spacing:.14em;"><div style="color:var(--color-accent-400);">FULL TIME · {{ competitionU }}</div><div>{{ tagline }}</div></div>
+<div style="display:flex;align-items:stretch;line-height:1;">
+<div style="flex:1;padding:28px 32px;font-size:88px;font-weight:800;letter-spacing:-.03em;background:var(--color-bg);color:var(--color-text);text-transform:uppercase;">{{ home }}</div>
+<div style="padding:28px 36px;font-size:88px;font-weight:800;background:var(--color-accent);color:#fff;font-variant-numeric:tabular-nums;">{{ homeScore }}–{{ awayScore }}</div>
+<div style="flex:1;padding:28px 32px;font-size:88px;font-weight:800;letter-spacing:-.03em;background:var(--color-bg);color:var(--color-text);text-transform:uppercase;text-align:right;">{{ away }}</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:4px solid var(--color-bg);line-height:1.1;">
+<div style="padding:28px 0 0;display:flex;flex-direction:column;gap:8px;"><div style="font-size:20px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">TIKTOK</div><div style="font-size:36px;font-weight:800;">@gametimewes</div></div>
+<div style="padding:28px 0 0;display:flex;flex-direction:column;gap:8px;"><div style="font-size:20px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">INSTAGRAM</div><div style="font-size:36px;font-weight:800;">@gametimewes</div></div>
+<div style="padding:28px 0 0;display:flex;flex-direction:column;gap:8px;"><div style="font-size:20px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">YOUTUBE</div><div style="font-size:36px;font-weight:800;">@gametimewes</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Be right back</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=w-brb</div></div>
+<div data-scene="w-brb" style="width:768px;height:432px;overflow:hidden;position:relative;border:2px solid var(--color-neutral-800);">
+<div style="width:1920px;height:1080px;transform:scale(0.4);transform-origin:0 0;position:absolute;left:0;top:0;background:#0d0c0c;color:var(--color-bg);display:flex;flex-direction:column;padding:80px 96px;">
+<div style="font-size:30px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">QUICK BREAK · MATCH STILL ON</div>
+<div style="font-size:220px;font-weight:800;line-height:.88;letter-spacing:-.045em;text-transform:uppercase;margin-top:24px;">Be right<br>back</div>
+<div style="margin-top:auto;display:flex;align-items:stretch;line-height:1;border-top:4px solid var(--color-bg);padding-top:40px;gap:0;">
+<div style="display:flex;align-items:center;gap:16px;background:var(--color-text);padding:0 28px;font-size:22px;font-weight:600;letter-spacing:.14em;">{{ pulse }}LIVE</div>
+<div style="padding:22px 32px;font-size:56px;font-weight:800;background:var(--color-bg);color:var(--color-text);">{{ homeShortU }}</div>
+<div style="padding:22px 32px;font-size:56px;font-weight:800;background:var(--color-accent);color:#fff;font-variant-numeric:tabular-nums;">{{ homeScore }}–{{ awayScore }}</div>
+<div style="padding:22px 32px;font-size:56px;font-weight:800;background:var(--color-bg);color:var(--color-text);">{{ awayShortU }}</div>
+<div style="display:flex;align-items:center;padding:0 28px;font-size:40px;font-weight:800;background:var(--color-text);font-variant-numeric:tabular-nums;">{{ minute }}′</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:20px;">
+<div style="display:flex;align-items:baseline;gap:16px;border-bottom:2px solid var(--color-neutral-800);padding-bottom:12px;"><div style="font-size:14px;font-weight:600;color:var(--color-accent-400);">06</div><div style="font-size:32px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;">Matchday cards</div><div style="font-size:15px;color:var(--color-neutral-400);">Full size · layer over any watchalong scene</div></div>
+<div style="display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start;">
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Goal alert</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=w-goal</div></div>
+<div data-card="w-goal" style="width:760px;display:flex;flex-direction:column;">
+{{ goalCard }}
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:17px;font-weight:800;text-transform:uppercase;">Score prediction poll</div><div style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--color-neutral-400);">?scene=w-poll</div></div>
+<div data-card="w-poll" style="width:560px;background:#0d0c0c;color:var(--color-bg);display:flex;flex-direction:column;">
+{{ stripe }}
+<div style="padding:20px 24px 16px;display:flex;flex-direction:column;gap:6px;border-bottom:2px solid var(--color-neutral-800);"><div style="font-size:18px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">PREDICT THE SCORE</div><div style="font-size:40px;font-weight:800;letter-spacing:-.02em;line-height:1.05;">{{ homeShortU }} v {{ awayShortU }}</div></div>
+<sc-for list="{{ poll }}" as="o" hint-placeholder-count="4">
+<div style="display:grid;grid-template-columns:120px minmax(0,1fr) 64px;align-items:center;gap:16px;padding:12px 24px;border-bottom:2px solid var(--color-neutral-800);">
+<div style="font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;">{{ o.label }}</div>
+<div style="height:20px;background:var(--color-text);"><div style="height:100%;width:{{ o.pct }}%;background:var(--color-accent);"></div></div>
+<div style="font-size:22px;font-weight:600;text-align:right;color:var(--color-neutral-300);">{{ o.pct }}%</div>
+</div>
+</sc-for>
+<div style="padding:14px 24px 18px;font-size:18px;font-weight:600;letter-spacing:.08em;color:var(--color-neutral-400);">VOTE WITH !PREDICT 2-1 · CLOSES AT KICK-OFF</div>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;mode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Milan&quot;,&quot;options&quot;:[&quot;Milan&quot;,&quot;Neutral&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;View&quot;},&quot;scene&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;overview&quot;,&quot;options&quot;:[&quot;overview&quot;,&quot;w-start&quot;,&quot;w-live&quot;,&quot;w-lineups&quot;,&quot;w-half&quot;,&quot;w-end&quot;,&quot;w-brb&quot;,&quot;w-goal&quot;,&quot;w-poll&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;View&quot;},&quot;motion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;View&quot;},&quot;countdownMinutes&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:15,&quot;min&quot;:1,&quot;max&quot;:60,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;View&quot;},&quot;competition&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Serie A&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Match&quot;},&quot;home&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;AC Milan&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Match&quot;},&quot;homeShort&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;MIL&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Match&quot;},&quot;away&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Opponent&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Match&quot;},&quot;awayShort&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;OPP&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Match&quot;},&quot;homeScore&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1,&quot;min&quot;:0,&quot;max&quot;:20,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Match&quot;},&quot;awayScore&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:0,&quot;min&quot;:0,&quot;max&quot;:20,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Match&quot;},&quot;minute&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;67&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Match&quot;},&quot;goalScorer&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Scorer name&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Match&quot;},&quot;homeFormation&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;4-3-3&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Lineups&quot;},&quot;homeXI&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;1 Player, 2 Player, 3 Player, 4 Player, 5 Player, 6 Player, 7 Player, 8 Player, 9 Player, 10 Player, 11 Player&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Lineups&quot;},&quot;awayFormation&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;4-3-3&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Lineups&quot;},&quot;awayXI&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;1 Player, 2 Player, 3 Player, 4 Player, 5 Player, 6 Player, 7 Player, 8 Player, 9 Player, 10 Player, 11 Player&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Lineups&quot;}}">
+class Component extends DCLogic {
+  state = { left: null };
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      const total = (this.props.countdownMinutes ?? 15) * 60;
+      this.setState(s => ({ left: s.left == null || s.left <= 0 ? total : s.left - 1 }));
+    }, 1000);
+    this.applyScene();
+  }
+  componentDidUpdate() { this.applyScene(); }
+  componentWillUnmount() { clearInterval(this.timer); }
+  applyScene() {
+    const q = new URLSearchParams(location.search).get('scene');
+    const p = this.props.scene && this.props.scene !== 'overview' ? this.props.scene : null;
+    const s = q || p;
+    let el = document.getElementById('gw-obs');
+    if (!s) { if (el) el.remove(); return; }
+    if (!el) { el = document.createElement('style'); el.id = 'gw-obs'; document.head.appendChild(el); }
+    const a = `[data-scene="${s}"],[data-card="${s}"]`;
+    el.textContent = `html,body{background:transparent!important;overflow:hidden!important}#gw-pack{visibility:hidden!important;background:transparent!important}
+${a}{visibility:visible!important;position:fixed!important;left:0!important;top:0!important;z-index:9999;border:0!important}
+[data-scene="${s}"] *,[data-card="${s}"] *{visibility:visible}
+[data-scene="${s}"]{width:1920px!important;height:1080px!important}
+[data-scene="${s}"]>div{transform:none!important}
+${a.split(',').map(x => x + ' [data-ph]').join(',')}{visibility:hidden!important}`;
+  }
+  parseXI(str, fallback) {
+    return (str ?? fallback).split(',').map(x => x.trim()).filter(Boolean).slice(0, 11).map(x => {
+      const m = x.match(/^(\d+)\s+(.*)$/);
+      return m ? { n: m[1], name: m[2] } : { n: '', name: x };
+    });
+  }
+  renderVals() {
+    const P = this.props;
+    const total = (P.countdownMinutes ?? 15) * 60;
+    const t = this.state.left ?? total;
+    const countdown = String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
+    const animate = P.motion ?? true;
+    const neutral = (P.mode ?? 'Milan') === 'Neutral';
+    const h = React.createElement;
+    const sBg = neutral ? 'var(--color-accent)' : 'repeating-linear-gradient(90deg,var(--color-accent) 0 30px,#0d0c0c 30px 60px)';
+    const fBg = neutral ? 'repeating-linear-gradient(90deg,transparent 0 316px,rgba(255,255,255,.18) 316px 320px) var(--color-accent)' : 'repeating-linear-gradient(90deg,var(--color-accent) 0 160px,#0d0c0c 160px 320px)';
+    const pulse = h('span', { style: { display: 'inline-block', width: 22, height: 22, flex: 'none', background: 'var(--color-accent)', animation: animate ? 'gw-pulse 1.6s ease-in-out infinite' : 'none' } });
+    const stripe = h('div', { style: { height: 14, flex: 'none', background: sBg, animation: animate && !neutral ? 'gw-drift 3s linear infinite' : 'none' } });
+    const stripeBottom = h('div', { style: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 10, background: sBg, animation: animate && !neutral ? 'gw-drift 3s linear infinite' : 'none' } });
+    const stripeField = h('div', { style: { position: 'absolute', inset: 0, background: fBg, animation: animate ? 'gw-drift-lg 24s linear infinite' : 'none' } });
+    const home = P.home ?? (neutral ? 'Home team' : 'AC Milan'), away = P.away ?? (neutral ? 'Away team' : 'Opponent');
+    const homeShortU = (P.homeShort ?? (neutral ? 'HOM' : 'MIL')).toUpperCase(), awayShortU = (P.awayShort ?? (neutral ? 'AWY' : 'OPP')).toUpperCase();
+    const tagline = neutral ? 'WATCHALONG' : 'FORZA MILAN';
+    const scorer = P.goalScorer ?? 'Scorer name';
+    const goalCard = h('div', { key: 'g', style: { display: 'flex', flexDirection: 'column', animation: animate ? 'gw-goal 4s cubic-bezier(.2,.8,.2,1) infinite' : 'none' } },
+      h('div', { style: { height: 14, background: neutral ? '#0d0c0c' : sBg } }),
+      h('div', { style: { display: 'flex', alignItems: 'stretch', background: 'var(--color-accent)', color: '#fff' } },
+        h('div', { style: { flex: 1, padding: '20px 28px 24px', display: 'flex', flexDirection: 'column', gap: 4 } },
+          h('div', { style: { fontSize: 112, fontWeight: 800, lineHeight: .9, letterSpacing: '-.045em' } }, 'GOAL'),
+          h('div', { style: { fontSize: 30, fontWeight: 800, marginTop: 8 } }, scorer + ' ' + (P.minute ?? '67') + '′')),
+        h('div', { style: { background: '#0d0c0c', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', gap: 6, padding: '20px 28px', minWidth: 220 } },
+          h('div', { style: { fontSize: 18, fontWeight: 600, letterSpacing: '.14em', color: 'var(--color-neutral-400)' } }, homeShortU + ' v ' + awayShortU),
+          h('div', { style: { fontSize: 64, fontWeight: 800, lineHeight: 1, fontVariantNumeric: 'tabular-nums' } }, (P.homeScore ?? 1) + '–' + (P.awayScore ?? 0)))));
+    const pollRaw = [['1–0', 31], ['2–1', 27], ['2–0', 18], ['Other', 24]];
+    return {
+      countdown, pulse, stripe, stripeBottom, stripeField, goalCard,
+      home, away, homeShortU, awayShortU, tagline,
+      competitionU: (P.competition ?? 'Serie A').toUpperCase(),
+      homeScore: P.homeScore ?? 1, awayScore: P.awayScore ?? 0, minute: P.minute ?? '67',
+      homeFormation: P.homeFormation ?? '4-3-3', awayFormation: P.awayFormation ?? '4-3-3',
+      homeXI: this.parseXI(P.homeXI, '1 Player, 2 Player, 3 Player, 4 Player, 5 Player, 6 Player, 7 Player, 8 Player, 9 Player, 10 Player, 11 Player'),
+      awayXI: this.parseXI(P.awayXI, '1 Player, 2 Player, 3 Player, 4 Player, 5 Player, 6 Player, 7 Player, 8 Player, 9 Player, 10 Player, 11 Player'),
+      poll: pollRaw.map(([label, pct]) => ({ label, pct }))
+    };
+  }
+}
+</script>
+</body>
+</html>

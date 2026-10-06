@@ -1,0 +1,11 @@
+{
+  "port": 7777,
+  "simbriefUser": "",
+  "mirrorEveryMs": 2000,
+  "firebase": {
+    "apiKey": "",
+    "databaseURL": "",
+    "email": "bridge@gametimewes.local",
+    "password": ""
+  }
+}

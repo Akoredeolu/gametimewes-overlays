@@ -1,0 +1,5 @@
+bridge/node_modules/
+bridge/config.json
+.DS_Store
+Thumbs.db
+*.log

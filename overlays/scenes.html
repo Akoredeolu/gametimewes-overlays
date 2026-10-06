@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gametimewes · Scene</title>
+<link rel="stylesheet" href="../ds/styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="../lib/overlay.css">
+<style>
+  /* live telemetry strip under the flight info (fed by bridge/bridge.js) */
+  .tele { display: grid; grid-template-columns: repeat(6, auto); background: var(--color-text); color: var(--color-bg); line-height: 1; }
+  .tele > div { display: flex; flex-direction: column; gap: 6px; padding: 12px 20px; border-right: 2px solid var(--color-neutral-800); }
+  .tele > div:last-child { border-right: 0; }
+  .tele span { font-size: calc(var(--ts) * .55); font-weight: 600; letter-spacing: .14em; color: var(--color-neutral-400); }
+  .tele b { font-size: var(--ts); font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  body.vertical .tele { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  body.vertical .tele > div:nth-child(3n) { border-right: 0; }
+  body.vertical .tele > div:nth-child(-n+3) { border-bottom: 2px solid var(--color-neutral-800); }
+</style>
+</head>
+<body>
+<div id="scaler"><div id="stage"></div></div>
+<script type="module" src="./scenes.js"></script>
+</body>
+</html>

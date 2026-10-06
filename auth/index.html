@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connect Twitch · Gametimewes</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="../ds/styles.css">
+<link rel="stylesheet" href="../dashboard/dashboard.css">
+</head>
+<body>
+<header class="top"><div class="stripe"></div><div class="bar"><div class="brand"><b>GAMETIMEWES</b><span>Connect Twitch</span></div><div class="who"><a class="btn-sm" href="../dashboard/">← Dashboard</a></div></div></header>
+<main style="max-width:860px">
+  <div class="card">
+    <h2>Twitch alerts</h2>
+    <p class="hint">Gives the alerts overlay read-only access to follows, subs, bits, raids and channel-point redemptions on your channel. The token is kept in this browser and in your OBS alerts URL only — never in the repo.</p>
+    <div id="body"></div>
+  </div>
+</main>
+<div id="toast"></div>
+<script type="module">
+import { CONFIG } from '../lib/config.js';
+import { tokenInfo } from '../lib/twitch-events.js';
+const SCOPES = 'moderator:read:followers channel:read:subscriptions bits:read channel:read:redemptions';
+const redirect = location.origin + location.pathname;
+const body = document.getElementById('body');
+const h = new URLSearchParams(location.hash.slice(1));
+if (h.get('access_token')) { try { localStorage.setItem('gtw_twitch_token', h.get('access_token')); } catch {} history.replaceState(null, '', location.pathname); }
+const token = (() => { try { return localStorage.getItem('gtw_twitch_token'); } catch { return null; } })();
+
+if (!CONFIG.twitchClientId) {
+  body.innerHTML = `<ol class="steps">
+    <li>Open <a href="https://dev.twitch.tv/console/apps/create" target="_blank" rel="noopener">dev.twitch.tv → Register your application</a>.</li>
+    <li>Name: <code>gametimewes-overlays</code> · Category: <code>Broadcaster Suite</code> · Client type: <code>Public</code>.</li>
+    <li>OAuth Redirect URL: <code>${redirect}</code></li>
+    <li>Copy the Client ID into <code>twitchClientId</code> in <code>lib/config.js</code>, commit, and reload this page.</li></ol>`;
+} else {
+  const authUrl = `https://id.twitch.tv/oauth2/authorize?${new URLSearchParams({ response_type: 'token', client_id: CONFIG.twitchClientId, redirect_uri: redirect, scope: SCOPES, force_verify: 'true' })}`;
+  const info = token ? await tokenInfo(token) : null;
+  const alertsUrl = new URL('../overlays/alerts.html', location.href).href + (info ? '#token=' + token : '');
+  body.innerHTML = info
+    ? `<p><b>Connected as ${info.login}</b> · expires in ${Math.round(info.expires_in / 86400)} days. Reconnect before then and update the OBS URL.</p>
+       <label>Alerts overlay URL (horizontal)<input readonly value="${alertsUrl}"></label>
+       <label>Alerts overlay URL (vertical)<input readonly value="${alertsUrl.replace('alerts.html', 'alerts.html?layout=vertical')}"></label>
+       <div class="row"><a class="btn btn-secondary" href="${authUrl}">Reconnect</a><button class="btn btn-ghost" id="forget">Forget token</button></div>`
+    : `<p class="hint">${token ? 'The saved token has expired.' : 'Not connected yet.'}</p><a class="btn btn-primary" href="${authUrl}">Connect with Twitch</a>`;
+  document.getElementById('forget')?.addEventListener('click', () => { localStorage.removeItem('gtw_twitch_token'); location.reload(); });
+}
+</script>
+</body>
+</html>
