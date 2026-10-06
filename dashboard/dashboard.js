@@ -8,8 +8,9 @@ import { playAlertSound } from '../lib/sounds.js';
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const ls = { get: k => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch {} } };
 const toast = msg => { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('on'), 2200); };
-const save = (path, value) => write(path, value).catch(e => toast('Not saved: ' + (e.code === 'PERMISSION_DENIED' ? 'sign in with an admin account' : e.message)));
-const savePatch = (path, obj) => patch(path, obj).catch(e => toast('Not saved: ' + (e.code === 'PERMISSION_DENIED' ? 'sign in with an admin account' : e.message)));
+const saveErr = e => { const m = 'Not saved: ' + (e.code === 'PERMISSION_DENIED' || /permission/i.test(e.message) ? 'sign in with an admin account' : e.message); toast(m); return Promise.reject(new Error(m)); };
+const save = (path, value) => write(path, value).catch(saveErr).catch(() => false);
+const savePatch = (path, obj) => patch(path, obj).then(() => true).catch(saveErr).catch(() => false);
 const S = {};
 let sim = null, twitch = null, uid = null, signedIn = !firebaseEnabled();
 
@@ -105,11 +106,11 @@ $('#htBtn').onclick = () => startCountdown(Number(S.match.secondHalfMinutes) || 
 // API-Football sync (runs only while this dashboard tab is open)
 const AF = 'https://v3.football.api-sports.io';
 $('#afKey').value = ls.get('apisports_key') || '';
-$('#afKey').onchange = () => ls.set('apisports_key', $('#afKey').value.trim());
+$('#afKey').onchange = () => { ls.set('apisports_key', $('#afKey').value.trim()); $('#waKey').value = $('#afKey').value; renderLinks(); };
 $('#afFixture').value = ls.get('gtw_af_fixture') || '';
 $('#afFixture').onchange = () => ls.set('gtw_af_fixture', $('#afFixture').value.trim());
 const af = async (path, q) => {
-  const r = await fetch(`${AF}/${path}?${new URLSearchParams(q)}`, { headers: { 'x-apisports-key': $('#afKey').value.trim() } });
+  const r = await fetch(`${AF}/${path}?${new URLSearchParams(q)}`, { headers: { 'x-apisports-key': ($('#afKey').value || $('#waKey').value).trim() } });
   const j = await r.json();
   if (j.errors && Object.keys(j.errors).length) throw new Error(Object.values(j.errors).join(' '));
   return j.response || [];
@@ -155,13 +156,34 @@ async function afPull() {
         lineupsDone = id;
       }
     }
-    await savePatch('match', upd);
+    if (!(await savePatch('match', upd))) { $('#afMsg').textContent = 'Pulled from API-Football but could not save — sign in with your admin account.'; return; }
     if (scored && $('#afGoal').checked) fireGoal({ ...m, ...upd });
     $('#afMsg').textContent = `Synced ${new Date().toLocaleTimeString()} · ${upd.home} ${upd.homeScore}–${upd.awayScore} ${upd.away} (${upd.minute}′)`;
   } catch (e) { $('#afMsg').textContent = 'API-Football: ' + e.message; }
 }
 $('#afPull').onclick = afPull;
 $('#afAuto').onchange = e => { clearInterval(afTimer); afTimer = e.target.checked ? setInterval(afPull, 60000) : null; if (afTimer) afPull(); };
+
+// ---------- watchalong overlay: key + fixture finder ----------
+$('#waKey').value = ls.get('apisports_key') || '';
+$('#waKey').onchange = () => { ls.set('apisports_key', $('#waKey').value.trim()); $('#afKey').value = $('#waKey').value; renderLinks(); };
+$('#waFind').onclick = async () => {
+  if (!$('#waKey').value.trim()) return $('#waMsg').textContent = 'Paste your API-Football key first.';
+  $('#waMsg').textContent = 'Searching…';
+  try {
+    const [live, next] = await Promise.all([af('fixtures', { team: 489, live: 'all' }).catch(() => []), af('fixtures', { team: 489, next: 5 })]);
+    const all = [...live, ...next];
+    $('#waList').innerHTML = '<option value="">— pick a match —</option>' + all.map(f => `<option value="${f.fixture.id}" data-league="${f.league.id}">${f.teams.home.name} v ${f.teams.away.name} · ${new Date(f.fixture.date).toLocaleString([], { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })} (${f.fixture.status.short})</option>`).join('');
+    $('#waList').classList.remove('hidden');
+    $('#waMsg').textContent = `${all.length} matches found — pick one to send it to the overlay.`;
+  } catch (e) { $('#waMsg').textContent = 'API-Football: ' + e.message; }
+};
+const LEAGUE_THEME = { 39: 'PL', 2: 'UCL', 3: 'UEL', 848: 'UECL', 135: 'SA', 140: 'LL', 78: 'BL', 1: 'WC' };
+$('#waList').onchange = async e => {
+  const o = e.target.selectedOptions[0]; if (!o?.value) return;
+  const ok = await savePatch('watchalong', { fixtureId: o.value, theme: LEAGUE_THEME[o.dataset.league] || 'GEN' });
+  if (ok) { $('#afFixture').value = o.value; ls.set('gtw_af_fixture', o.value); $('#waMsg').textContent = 'Sent to the overlay. It refreshes every 15 s.'; }
+};
 
 // ---------- watchalong slips ----------
 function parseSlips(text) {

@@ -107,6 +107,13 @@
 <section data-pane="watchalong" class="grid hidden">
   <div class="card span2">
     <h2>Watchalong overlay <small>overlays/watchalong.html — scorebug, lineups, events, bet slips</small></h2>
+    <p class="hint">This tab picks the match the <b>Watchalong API overlay</b> shows; the overlay itself pulls live score, events and lineups from API-Football. Your API key is saved in this browser and added to the overlay link on the <b>OBS links</b> tab (copy that link again after changing the key). To feed the other watchalong scenes (w-live, w-half…) use <b>Match → API-Football sync</b>.</p>
+    <div class="row">
+      <label class="w2">API-Football key<input id="waKey" type="password" autocomplete="off" placeholder="from dashboard.api-football.com"></label>
+      <button id="waFind" class="btn btn-secondary">Find Milan matches</button>
+      <select id="waList" class="hidden" style="flex:2"></select>
+    </div>
+    <p class="hint" id="waMsg"></p>
     <div class="row">
       <label>Fixture ID<input data-bind="watchalong.fixtureId"></label>
       <label>Competition<select data-bind="watchalong.theme">
