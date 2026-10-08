@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&display=block">
+<style>
+html,body{margin:0;background:transparent;overflow:hidden}
+#s{position:relative;width:var(--W);height:var(--H);overflow:hidden}
+.bar{position:absolute;top:0;height:100%;will-change:transform}
+#band{position:absolute;left:0;right:0;top:50%;background:#0d0c0c;transform-origin:left center}
+#band:before,#band:after{content:'';position:absolute;left:0;right:0;height:14px;background:repeating-linear-gradient(90deg,#ec3013 0 30px,#0d0c0c 30px 60px)}
+#band:before{top:0}#band:after{bottom:0}
+#mark{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-family:Archivo,system-ui,sans-serif;color:#f3f2f2;opacity:0}
+#mark b{display:block;font-weight:800;letter-spacing:-.04em;text-transform:uppercase;line-height:.9}
+#mark i{display:block;font-style:normal;font-weight:600;letter-spacing:.3em;color:#ec3013;margin-top:.5em}
+#mark .rule{height:.12em;background:#ec3013;margin:.35em auto 0;transform-origin:left}
+</style></head><body><div id="s"><div id="band"></div><div id="mark"><b>Gametimewes</b><div class="rule"></div><i>FORZA MILAN</i></div></div>
+<script>
+const P=new URLSearchParams(location.search), W=+P.get('w'), H=+P.get('h'), BW=+P.get('bw');
+const s=document.getElementById('s'); s.style.setProperty('--W',W+'px'); s.style.setProperty('--H',H+'px');
+const n=Math.ceil(W/BW), bars=[];
+for(let i=0;i<n;i++){const b=document.createElement('div');b.className='bar';b.style.left=i*BW+'px';b.style.width=(BW+1)+'px';
+ b.style.background=i%2?'#0d0c0c':'#ec3013';s.insertBefore(b,s.firstChild);bars.push(b);}
+const mark=document.getElementById('mark'); mark.style.fontSize=(W>H?150:118)+'px'; mark.querySelector('i').style.fontSize=(W>H?30:26)+'px';
+const band=document.getElementById('band'); const BH=W>H?380:330; band.style.height=BH+'px'; band.style.marginTop=(-BH/2)+'px';
+const rule=mark.querySelector('.rule'); rule.style.width=(W>H?520:400)+'px';
+const easeIn=t=>t*t*t, easeOut=t=>1-Math.pow(1-t,3), clamp=t=>Math.max(0,Math.min(1,t));
+const DUR=1200, IN=480, HOLD_END=720, STAG=0.45;  // ms; fully covered from IN to HOLD_END
+window.render=ms=>{
+ bars.forEach((b,i)=>{
+  const k=i/(n-1);
+  let y;
+  if(ms<=HOLD_END){ // drop in from top, staggered left->right (alternate from bottom for odd bars)
+   const t=clamp((ms/IN - k*STAG)/(1-STAG)); y=(1-easeOut(t))*(i%2?1:-1)*H;
+  } else { // exit continuing the same direction, staggered
+   const t=clamp(((ms-HOLD_END)/(DUR-HOLD_END) - k*STAG)/(1-STAG)); y=easeIn(t)*(i%2?-1:1)*H;
+  }
+  b.style.transform=`translateY(${y}px)`;
+ });
+ const mIn=clamp((ms-300)/180), mOut=clamp((ms-HOLD_END+60)/120);
+ mark.style.opacity=Math.min(mIn,1-mOut);
+ const bIn=easeOut(clamp((ms-260)/200)), bOut=easeIn(clamp((ms-HOLD_END+40)/160));
+ band.style.transform=`scaleX(${bIn})`; band.style.transformOrigin=bOut>0?'right center':'left center'; if(bOut>0) band.style.transform=`scaleX(${1-bOut})`;
+ mark.style.transform=`translateY(-50%) scale(${0.94+0.06*easeOut(mIn)})`;
+ rule.style.transform=`scaleX(${easeOut(clamp((ms-340)/260))})`;
+};
+render(0);
+</script></body></html>

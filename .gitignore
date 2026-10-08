@@ -3,3 +3,6 @@ bridge/config.json
 .DS_Store
 Thumbs.db
 *.log
+obs/dist/
+obs/*.local.json
+*-export.json

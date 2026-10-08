@@ -16,6 +16,7 @@ lib/                    shared modules (config, state, chat, EventSub, sim)
 ds/                     Modernist design-system tokens (styles.css)
 design/                 the original Claude Design canvases, for reference
 firebase/               Realtime Database security rules
+obs/                    OBS scene collections, stinger transition, Stream Deck layout (see obs/README.md)
 ```
 
 ## Scene ids
@@ -75,6 +76,9 @@ Every alert plays a built-in sound (generated in the browser, no files or licenc
 
 ## OBS
 
+The full OBS setup (3 scene collections with horizontal + vertical scenes, stinger, hotkeys, audio routing) lives in [`obs/`](obs/README.md): `python3 obs/build.py --from <your export>` then **Scene Collection → Import**.
+
+Manual setup: 
 Add a **Browser** source, paste a URL from the dashboard's **OBS links** tab and set the width/height it shows. For vertical canvases (Aitum Vertical, TikTok Live Studio, a second OBS profile) use the vertical links; key content stays inside the TikTok safe zone (top 180 px, bottom 420 px, right 140 px clear).
 
 ## Local development
