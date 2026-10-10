@@ -127,11 +127,11 @@ T['f-end'] = V => {
   if (!V) return full(`<div style="display:flex;flex-direction:column;padding:80px 96px;gap:56px;height:100%">
     <div style="display:flex;flex-direction:column;gap:12px;"><div style="font-size:30px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">ARRIVALS · GAMETIMEWES</div>${big('Thanks for flying', 160, 'white-space:nowrap')}</div>
     ${flightBoard('LANDED', 'ARRIVED')}
-    <div style="margin-top:auto;display:flex;justify-content:space-between;font-size:28px;font-weight:600;letter-spacing:.08em;color:var(--color-neutral-400);"><div>NEXT LEG OF THE TBM TOUR · SAME TIME NEXT WEEK</div><div>${esc(S.socials.handle)}</div></div></div>`);
+    <div style="margin-top:auto;display:flex;justify-content:space-between;font-size:28px;font-weight:600;letter-spacing:.08em;color:var(--color-neutral-400);"><div>${esc(S.flight.next || 'NEXT LEG OF THE TBM TOUR · SAME TIME NEXT WEEK')}</div><div>${esc(S.socials.handle)}</div></div></div>`);
   return full(`<div style="display:flex;flex-direction:column;padding:180px 72px 120px;gap:56px;height:100%">
     <div style="display:flex;flex-direction:column;gap:16px;"><div style="font-size:28px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">ARRIVALS · GAMETIMEWES</div>${big('Thanks<br>for<br>flying', 190)}</div>
     ${flightBoard('LANDED', 'ARRIVED', true)}
-    <div style="margin-top:auto;display:flex;flex-direction:column;gap:12px;font-size:26px;font-weight:600;letter-spacing:.08em;color:var(--color-neutral-400);"><div>NEXT LEG · SAME TIME NEXT WEEK</div><div>${esc(S.socials.handle)}</div></div></div>`);
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:12px;font-size:26px;font-weight:600;letter-spacing:.08em;color:var(--color-neutral-400);"><div>${esc(S.flight.next || 'NEXT LEG · SAME TIME NEXT WEEK')}</div><div>${esc(S.socials.handle)}</div></div></div>`);
 };
 
 // ---------- Pro Clubs / gaming pack ----------
