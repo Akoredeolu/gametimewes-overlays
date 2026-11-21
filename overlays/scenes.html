@@ -17,6 +17,10 @@
   body.vertical .tele { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   body.vertical .tele > div:nth-child(3n) { border-right: 0; }
   body.vertical .tele > div:nth-child(-n+3) { border-bottom: 2px solid var(--color-neutral-800); }
+  /* 3 × 2 telemetry grid for narrow panels (g-game) */
+  .tele.tele3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .tele.tele3 > div:nth-child(3n) { border-right: 0; }
+  .tele.tele3 > div:nth-child(-n+3) { border-bottom: 2px solid var(--color-neutral-800); }
 </style>
 </head>
 <body>

@@ -11,7 +11,7 @@ const sceneId = params.get('scene') || 'f-game';
 const stage = document.getElementById('stage');
 bootStage(stage);
 
-const S = { flight: null, match: null, countdown: null, socials: null, clubs: null, poll: null, sim: null };
+const S = { flight: null, match: null, countdown: null, socials: null, clubs: null, gta: null, poll: null, sim: null };
 
 // ---------- building blocks ----------
 const stripe = (extra = '') => `<div class="stripe" style="${extra}"></div>`;
@@ -25,7 +25,7 @@ const cell = (label, value, { size = 36, pad = '18px 28px', accent = false, bord
   `<div style="padding:${pad};display:flex;flex-direction:column;gap:6px;${border ? 'border-right:2px solid var(--color-neutral-800);' : ''}${accent ? 'background:var(--color-accent);color:#fff;' : ''}">
     <div style="font-size:${lsize}px;font-weight:600;letter-spacing:.14em;${accent ? '' : 'color:var(--color-neutral-400);'}">${label}</div>
     <div style="font-size:${size}px;font-weight:800;white-space:nowrap">${value}</div></div>`;
-const teleRow = (size = 26) => `<div data-telemetry class="tele hidden" style="--ts:${size}px">
+const teleRow = (size = 26, cls = '') => `<div data-telemetry class="tele ${cls} hidden" style="--ts:${size}px">
   ${['ALT', 'GS', 'HDG', 'VS', 'DIST', 'ETE'].map(k => `<div><span>${k}</span><b data-t="${k.toLowerCase()}">—</b></div>`).join('')}</div>`;
 const socialsGrid = (cols = 3, size = 36) => `<div style="display:grid;grid-template-columns:repeat(${cols},minmax(0,1fr));border-top:4px solid var(--color-bg);line-height:1.1;">
   ${[['TIKTOK', S.socials.tiktok], ['INSTAGRAM', S.socials.instagram], ['YOUTUBE', S.socials.youtube]].map(([k, v]) =>
@@ -133,6 +133,45 @@ T['f-end'] = V => {
     ${flightBoard('LANDED', 'ARRIVED', true)}
     <div style="margin-top:auto;display:flex;flex-direction:column;gap:12px;font-size:26px;font-weight:600;letter-spacing:.08em;color:var(--color-neutral-400);"><div>${esc(S.flight.next || 'NEXT LEG · SAME TIME NEXT WEEK')}</div><div>${esc(S.socials.handle)}</div></div></div>`);
 };
+
+// ---------- GTA crossover pack (console game on the capture card while the flight cruises) ----------
+// g-game: PS5 gameplay with webcam + a compact live flight panel, so viewers can still follow the plane.
+// g-cruise / g-descent: hold cards for the two switches (they also cover the HDMI swap).
+const gtaFlight = () => {
+  const f = S.flight;
+  return `<div style="display:flex;flex-direction:column;border-top:8px solid var(--color-accent);">
+    <div style="display:flex;align-items:center;gap:14px;background:#0d0c0c;color:var(--color-bg);padding:12px 18px;line-height:1.1;white-space:nowrap;">
+      <span style="font-size:26px;font-weight:800;">${esc(f.callsign)}</span>
+      <span style="font-size:22px;font-weight:600;color:var(--color-neutral-400);overflow:hidden;text-overflow:ellipsis;">${esc(f.from)} → ${esc(f.to)}</span>
+      <span style="margin-left:auto;flex-shrink:0;background:var(--color-accent);color:#fff;padding:4px 12px;font-size:18px;font-weight:800;letter-spacing:.08em;">${phase()}</span>
+    </div>${teleRow(20, 'tele3')}</div>`;
+};
+const gtaCamBar = () => `<div style="display:flex;align-items:center;gap:16px;background:#0d0c0c;color:var(--color-bg);padding:14px 20px;font-size:28px;font-weight:800;">${pulse()}<span>GAMETIMEWES</span><span style="margin-left:auto;font-size:20px;font-weight:600;letter-spacing:.12em;color:var(--color-accent-400);">${esc(S.gta.label)}</span></div>`;
+
+T['g-game'] = V => {
+  if (!V) return `${bg('GAMEPLAY CAPTURE · PS5')}
+    <div style="position:absolute;right:48px;bottom:48px;width:480px;display:flex;flex-direction:column;gap:16px;">
+      ${gtaFlight()}
+      <div style="display:flex;flex-direction:column;">${stripe()}${ph('WEBCAM', 'height:270px')}${gtaCamBar()}</div></div>`;
+  return `${bg('GAMEPLAY · PS5')}
+    <div style="position:absolute;left:48px;right:48px;top:180px;">${gtaFlight()}</div>
+    <div style="position:absolute;left:48px;bottom:440px;width:560px;display:flex;flex-direction:column;">${stripe()}${ph('WEBCAM', 'height:315px')}${gtaCamBar()}</div>`;
+};
+
+const gtaHold = (kicker, titleH, titleV, line) => V => {
+  const f = S.flight;
+  const strip = cols => `<div style="margin-top:auto;display:flex;flex-direction:column;"><div style="display:grid;grid-template-columns:repeat(${cols},minmax(0,1fr));border-top:4px solid var(--color-bg);line-height:1.1;">
+    ${cell('FLIGHT', esc(f.callsign), { size: 48, pad: '28px 0', border: false, lsize: 20 })}${cell('ROUTE', `${esc(f.from)} → ${esc(f.to)}`, { size: 48, pad: '28px 0', border: false, lsize: 20 })}
+    ${cell('AIRCRAFT', esc(f.aircraft), { size: 48, pad: '28px 0', border: false, lsize: 20 })}${cell('PHASE', phase(), { size: 48, pad: '28px 32px', border: false, accent: true, lsize: 20 })}</div>${teleRow(V ? 26 : 28)}</div>`;
+  if (!V) return full(`<div style="display:flex;flex-direction:column;padding:80px 96px;height:100%">
+    <div style="font-size:30px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">${kicker()}</div>${big(titleH, 180, 'margin-top:24px')}
+    <div style="font-size:40px;font-weight:600;color:var(--color-neutral-300);margin-top:40px;">${esc(line())}</div>${strip(4)}</div>`);
+  return full(`<div style="display:flex;flex-direction:column;padding:180px 72px 160px;height:100%">
+    <div style="font-size:28px;font-weight:600;letter-spacing:.14em;color:var(--color-accent-400);">${kicker()}</div>${big(titleV, 160, 'margin-top:24px')}
+    <div style="font-size:44px;font-weight:600;color:var(--color-neutral-300);margin-top:40px;">${esc(line())}</div>${strip(2)}</div>`);
+};
+T['g-cruise'] = gtaHold(() => 'CRUISE · AUTOPILOT ENGAGED', 'Heading to<br>Leonida', 'Heading<br>to<br>Leonida', () => S.gta.cruiseLine);
+T['g-descent'] = gtaHold(() => `TOP OF DESCENT · ${esc(String(S.flight.toCity || S.flight.to).toUpperCase())}`, 'Back to the<br>flight deck', 'Back to<br>the<br>flight<br>deck', () => S.gta.descentLine);
 
 // ---------- Pro Clubs / gaming pack ----------
 const fieldCard = (V, inner) => !V
@@ -311,11 +350,11 @@ function paintTelemetry() {
   set('alt', fmt.alt(t)); set('gs', fmt.gs(t)); set('hdg', fmt.hdg(t)); set('vs', fmt.vs(t)); set('dist', fmt.dist(t)); set('ete', fmt.ete(t));
 }
 
-['flight', 'match', 'countdown', 'socials', 'clubs', 'poll'].forEach(k => watch(k, v => {
+['flight', 'match', 'countdown', 'socials', 'clubs', 'gta', 'poll'].forEach(k => watch(k, v => {
   if (k === 'poll' && v.id !== S.poll?.id) { S.poll = v; loadVotes(); }
   S[k] = v; render();
 }));
-if (sceneId.startsWith('f-')) watchSim(t => { S.sim = t; render(); });
+if (sceneId.startsWith('f-') || sceneId.startsWith('g-')) watchSim(t => { S.sim = t; render(); });
 setInterval(() => document.querySelectorAll('[data-countdown]').forEach(el => el.textContent = countdownText(S.countdown)), 250);
 
 if (sceneId === 'w-poll') {
