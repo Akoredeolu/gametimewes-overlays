@@ -51,7 +51,7 @@ const fill = (section, obj) => $$(`[data-bind^="${section}."]`).forEach(el => {
   if (el.type === 'checkbox') el.checked = v !== false && v != null; else el.value = v ?? '';
 });
 // subscribe after the whole module has initialised (local mode fires callbacks synchronously)
-queueMicrotask(() => ['flight', 'match', 'watchalong', 'poll', 'clubs', 'socials', 'countdown', 'audio'].forEach(sec => watch(sec, v => { S[sec] = v; fill(sec, v); onState(sec); })));
+queueMicrotask(() => ['flight', 'match', 'watchalong', 'poll', 'clubs', 'gta', 'socials', 'countdown', 'audio'].forEach(sec => watch(sec, v => { S[sec] = v; fill(sec, v); onState(sec); })));
 
 function onState(sec) {
   if (sec === 'flight') paintPhase();
@@ -308,6 +308,7 @@ function paintSounds() {
 // ---------- OBS links ----------
 const SCENES = [
   ['Flight sim', [['f-start', 'Starting soon'], ['f-game', 'Gameplay + webcam'], ['f-cockpit', 'Cockpit · minimal'], ['f-chat', 'Just chatting'], ['f-brb', 'Be right back'], ['f-end', 'Ending']]],
+  ['GTA crossover', [['g-game', 'PS5 gameplay + webcam + live flight panel'], ['g-cruise', 'Hold card · autopilot engaged (to GTA)'], ['g-descent', 'Hold card · top of descent (back to the sim)']]],
   ['Pro Clubs', [['c-start', 'Starting soon'], ['c-game', 'Gameplay + webcam'], ['c-half', 'Half-time'], ['c-brb', 'Be right back'], ['c-end', 'Ending']]],
   ['Watchalong', [['w-start', 'Pre-match'], ['w-live', 'Live match'], ['w-lineups', 'Lineups'], ['w-half', 'Half-time'], ['w-end', 'Full-time'], ['w-brb', 'Be right back'], ['w-poll', 'Prediction poll (shows while open)']]],
 ];

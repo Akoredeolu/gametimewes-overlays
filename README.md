@@ -24,6 +24,7 @@ obs/                    OBS scene collections, stinger transition, Stream Deck l
 | Pack | Scenes |
 | --- | --- |
 | Flight sim | `f-start` `f-game` `f-cockpit` `f-chat` `f-brb` `f-end` |
+| GTA crossover | `g-game` `g-cruise` `g-descent` (console game during cruise; flight panel + telemetry stay live) |
 | Pro Clubs | `c-start` `c-game` `c-half` `c-brb` `c-end` |
 | Watchalong | `w-start` `w-live` `w-lineups` `w-half` `w-end` `w-brb` `w-goal` `w-poll` |
 
