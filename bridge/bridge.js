@@ -63,7 +63,7 @@ function detectPhase(t) {
 }
 
 // ---------------- Firebase mirror (optional) ----------------
-let idToken = null, refreshToken = null, tokenExp = 0;
+let idToken = null, refreshToken = null, tokenExp = 0, bridgeUid = null;
 async function fbToken() {
   const fb = CFG.firebase;
   if (Date.now() < tokenExp - 60000) return idToken;
@@ -77,6 +77,7 @@ async function fbToken() {
   const j = await r.json();
   if (!r.ok) throw new Error(j.error?.message || r.status);
   idToken = j.idToken || j.id_token; refreshToken = j.refreshToken || j.refresh_token;
+  bridgeUid = j.localId || j.user_id || bridgeUid;
   tokenExp = Date.now() + Number(j.expiresIn || j.expires_in) * 1000;
   return idToken;
 }
@@ -88,6 +89,7 @@ async function mirror(t) {
   try {
     const tok = await fbToken();
     const r = await fetch(`${fb.databaseURL.replace(/\/$/, '')}/gtw/sim.json?auth=${tok}`, { method: 'PUT', body: JSON.stringify({ ...t, ts: { '.sv': 'timestamp' } }) });
+    if (r.status === 401 || r.status === 403) throw new Error(`signed in as ${fb.email} but that account isn't an admin. In Firebase → Realtime Database → Data, add  admins / ${bridgeUid} : true  (boolean), then restart the bridge.`);
     if (!r.ok) throw new Error(`${r.status} ${await r.text()}`);
     mirrorWarned = false;
   } catch (e) { if (!mirrorWarned) log('Firebase mirror failed:', e.message); mirrorWarned = true; }
