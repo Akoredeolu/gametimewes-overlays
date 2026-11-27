@@ -24,6 +24,7 @@
 <body>
 <header class="top"><div class="stripe"></div><div class="bar"><div class="brand"><b>GAMETIMEWES</b><span>Overlay pack · Rossoneri</span></div>
   <nav><button class="on" data-l="h">Horizontal</button><button data-l="v">Vertical</button></nav>
+  <nav id="themes"></nav>
   <div class="who"><a class="btn-sm" href="panels/">Twitch panels</a><a class="btn btn-primary" href="dashboard/">Open dashboard →</a></div></div></header>
 <main>
   <div class="hero"><h1>Overlay<br>pack</h1><p class="hint" style="max-width:520px">Every scene below is a live OBS browser source. Grab exact URLs (with the right size) from the dashboard's <b>OBS links</b> tab. Previews show the gameplay/webcam placeholders, which are invisible on air.</p></div>
@@ -36,14 +37,20 @@ const GROUPS = [
   ['Pro Clubs', ['c-start', 'c-game', 'c-half', 'c-brb', 'c-end']],
   ['Watchalong', ['w-start', 'w-live', 'w-lineups', 'w-half', 'w-end', 'w-brb', 'w-goal']],
 ];
+let THEME = '';
 function render(l) {
   document.body.classList.toggle('v', l === 'v');
   document.getElementById('gal').innerHTML = GROUPS.map(([g, ids]) => `<h3>${g}</h3><div class="gal">${ids.map(id =>
-    `<div class="tile"><div class="k"><span>${id}</span><a href="overlays/scenes.html?scene=${id}&preview=1${l === 'v' ? '&layout=vertical&safe=1' : ''}" target="_blank" rel="noopener"><code>open ↗</code></a></div>
-     <div class="frame"><iframe loading="lazy" title="${id}" src="overlays/scenes.html?scene=${id}&preview=1${l === 'v' ? '&layout=vertical' : ''}"></iframe></div></div>`).join('')}</div>`).join('');
+    `<div class="tile"><div class="k"><span>${id}</span><a href="overlays/scenes.html?scene=${id}&preview=1${l === 'v' ? '&layout=vertical&safe=1' : ''}${THEME ? '&theme=' + THEME : ''}" target="_blank" rel="noopener"><code>open ↗</code></a></div>
+     <div class="frame"><iframe loading="lazy" title="${id}" src="overlays/scenes.html?scene=${id}&preview=1${l === 'v' ? '&layout=vertical' : ''}${THEME ? '&theme=' + THEME : ''}"></iframe></div></div>`).join('')}</div>`).join('');
 }
-document.querySelectorAll('nav button').forEach(b => b.onclick = () => { document.querySelectorAll('nav button').forEach(x => x.classList.toggle('on', x === b)); render(b.dataset.l); });
+document.querySelectorAll('nav:not(#themes) button').forEach(b => b.onclick = () => { document.querySelectorAll('nav button').forEach(x => x.classList.toggle('on', x === b)); render(b.dataset.l); });
 render('h');
+import('./themes/themes.js').then(({ THEMES }) => {
+  const nav = document.getElementById('themes'), layout = () => document.body.classList.contains('v') ? 'v' : 'h';
+  nav.innerHTML = '<button class="on" data-t="">Live theme</button>' + Object.entries(THEMES).map(([id, t]) => `<button data-t="${id}">${t.name}</button>`).join('');
+  nav.querySelectorAll('button').forEach(b => b.onclick = () => { THEME = b.dataset.t; nav.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); render(layout()); });
+});
 </script>
 </body>
 </html>

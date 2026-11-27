@@ -340,7 +340,7 @@ function buildUrl(){
 // ---------- rendering ----------
 function el(html){ const d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstElementChild; }
 function clearStage(){ // keep goalBanner + cam frames
-  [...$("stage").children].forEach(c=>{ if(c.id!=='goalBanner' && c.id!=='cams') c.remove(); });
+  [...$("stage").children].forEach(c=>{ if(c.id!=='goalBanner' && c.id!=='cams' && !c.classList.contains('theme-keep')) c.remove(); });
 }
 function renderCams(){
   const old=$("cams"); if(old)old.remove();
@@ -536,6 +536,8 @@ window.gtwApplyState=function(st){
 </script>
 <script type="module">
 import { watch } from '../lib/state.js';
+import { initTheme } from '../lib/theme.js';
+initTheme({ stage: document.getElementById('stage'), ctx: { sceneId: 'watchalong', vertical: document.body.classList.contains('vertical') } });
 const qp=new URLSearchParams(location.search);
 if(!qp.get('fixture') && qp.get('demo')!=='1') watch('watchalong', st=>window.gtwApplyState(st));
 </script>

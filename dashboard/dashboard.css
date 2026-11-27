@@ -85,3 +85,6 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
 .snd select, .snd input { padding: 6px 8px; font-size: 13px; }
 .snd input.hidden { display: block !important; visibility: hidden; }
 input[type=range] { padding: 0; border: 0; background: none; accent-color: var(--acc); height: 32px; }
+
+.theme-pick { flex-direction: row; align-items: center; gap: 8px; min-width: 0; flex: none; color: var(--sub); font-size: 11px; }
+.theme-pick select { width: auto; padding: 6px 8px; font-size: 13px; }

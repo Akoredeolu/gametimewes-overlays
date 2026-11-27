@@ -21,7 +21,7 @@
       <button data-tab="links">OBS links</button>
       <button data-tab="setup">Setup</button>
     </nav>
-    <div class="who"><span id="mode" class="pill"></span><span id="user"></span><button id="signin" class="btn-sm">Sign in</button></div>
+    <div class="who"><label class="theme-pick" title="Switches every overlay in OBS instantly">THEME<select id="themeSel"></select></label><span id="themeNow" class="pill live"></span><span id="mode" class="pill"></span><span id="user"></span><button id="signin" class="btn-sm">Sign in</button></div>
   </div>
 </header>
 
@@ -198,6 +198,7 @@
     <div class="row">
       <div class="seg" id="layoutSeg"><button data-l="h" class="on">Horizontal 1920×1080</button><button data-l="v">Vertical 1080×1920</button></div>
       <label class="chk"><input type="checkbox" id="prevToggle"> Preview placeholders</label>
+      <label style="flex:none;min-width:220px">Theme in links<select id="linkTheme"><option value="">Follow dashboard switch (recommended)</option></select></label>
     </div>
     <p class="hint">In OBS: Sources → + → Browser → paste URL, set the width/height shown, tick "Shutdown source when not visible" off for alerts and chat. Every link pulls live data from this dashboard.</p>
     <div id="links"></div>

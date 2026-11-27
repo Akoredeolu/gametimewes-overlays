@@ -6,15 +6,21 @@ import { bootStage, vertical, esc, countdownText } from '../lib/stage.js';
 import { mountChatList, connectChat } from '../lib/chat.js';
 import { watchSim, fmt } from '../lib/sim.js';
 import { goalCard } from './cards.js';
+import { initTheme, tx } from '../lib/theme.js';
 
 const sceneId = params.get('scene') || 'f-game';
 const stage = document.getElementById('stage');
 bootStage(stage);
+// scene markup renders into #content; theme decorations (snow etc.) mount alongside it on #stage
+const content = Object.assign(document.createElement('div'), { id: 'content' });
+content.style.cssText = 'position:absolute;inset:0';
+stage.appendChild(content);
 
 const S = { flight: null, match: null, countdown: null, socials: null, clubs: null, gta: null, poll: null, sim: null };
 
 // ---------- building blocks ----------
 const stripe = (extra = '') => `<div class="stripe" style="${extra}"></div>`;
+const camStripe = () => `<div class="stripe cam-stripe"></div>`; // webcam frames (themes can decorate them)
 const field = () => `<div class="stripe-field"></div>`;
 const pulse = () => `<span class="pulse"></span>`;
 const cd = () => `<span class="num" data-countdown>${countdownText(S.countdown)}</span>`;
@@ -79,7 +85,7 @@ T['f-game'] = V => {
       <div style="display:flex;background:#0d0c0c;color:var(--color-bg);border-top:8px solid var(--color-accent);line-height:1.1;">
         ${cell('FLIGHT', esc(f.callsign))}${cell('ROUTE', `${esc(f.from)} → ${esc(f.to)}`)}${cell('AIRCRAFT', esc(f.aircraft))}${cell('TOUR', `LEG ${esc(f.leg)}`)}${cell('PHASE', phase(), { accent: true, border: false })}
       </div>${teleRow()}</div>
-    <div style="position:absolute;right:48px;bottom:48px;width:480px;display:flex;flex-direction:column;">${stripe()}${ph('WEBCAM', 'height:270px')}${camBar}</div>`;
+    <div style="position:absolute;right:48px;bottom:48px;width:480px;display:flex;flex-direction:column;">${camStripe()}${ph('WEBCAM', 'height:270px')}${camBar}</div>`;
   return `${bg('GAMEPLAY · MSFS 2024')}
     <div style="position:absolute;left:48px;right:48px;top:180px;display:flex;flex-direction:column;">
       <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:#0d0c0c;color:var(--color-bg);border-top:8px solid var(--color-accent);line-height:1.1;">
@@ -87,7 +93,7 @@ T['f-game'] = V => {
       </div>
       <div style="display:flex;justify-content:space-between;background:var(--color-text);padding:12px 28px;font-size:22px;font-weight:600;letter-spacing:.12em;color:var(--color-neutral-300)"><span>${esc(f.aircraft)}</span><span>${esc(f.series)} · LEG ${esc(f.leg)}</span></div>
       ${teleRow(24)}</div>
-    <div style="position:absolute;left:48px;bottom:440px;width:560px;display:flex;flex-direction:column;">${stripe()}${ph('WEBCAM', 'height:315px')}${camBar}</div>`;
+    <div style="position:absolute;left:48px;bottom:440px;width:560px;display:flex;flex-direction:column;">${camStripe()}${ph('WEBCAM', 'height:315px')}${camBar}</div>`;
 };
 
 T['f-cockpit'] = V => {
@@ -100,12 +106,12 @@ T['f-cockpit'] = V => {
 T['f-chat'] = V => {
   if (!V) return full(`<div style="display:grid;grid-template-columns:1fr 520px;grid-template-rows:auto 1fr auto;gap:40px;padding:64px 96px;height:100%">
     <div style="grid-column:1 / -1;display:flex;justify-content:space-between;align-items:flex-end;border-bottom:4px solid var(--color-bg);padding-bottom:28px;">${big('Just chatting', 96, 'line-height:.9;letter-spacing:-.04em')}<div style="display:flex;align-items:center;gap:16px;font-size:28px;font-weight:800;">${pulse()}GAMETIMEWES</div></div>
-    <div style="display:flex;flex-direction:column;min-height:0;">${stripe()}${ph('WEBCAM · 16:9', 'flex:1')}</div>
+    <div style="display:flex;flex-direction:column;min-height:0;">${camStripe()}${ph('WEBCAM · 16:9', 'flex:1')}</div>
     <div style="display:flex;flex-direction:column;background:var(--color-text);min-height:0;">${stripe()}<div style="padding:18px 24px;font-size:24px;font-weight:800;letter-spacing:.1em;border-bottom:2px solid var(--color-neutral-800);">CHAT</div>${chatSlot('flex:1;margin:0 24px 20px;min-height:0')}</div>
     <div style="grid-column:1 / -1;display:flex;justify-content:space-between;font-size:26px;font-weight:600;letter-spacing:.08em;color:var(--color-neutral-400);"><div>TIKTOK · INSTAGRAM · YOUTUBE</div><div>${esc(S.socials.handle)}</div></div></div>`);
   return full(`<div style="display:flex;flex-direction:column;gap:32px;padding:180px 48px 120px;height:100%">
     <div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:4px solid var(--color-bg);padding-bottom:24px;">${big('Just<br>chatting', 120, 'line-height:.9;letter-spacing:-.04em')}<div style="display:flex;align-items:center;gap:14px;font-size:26px;font-weight:800;">${pulse()}LIVE</div></div>
-    <div style="display:flex;flex-direction:column;">${stripe()}${ph('WEBCAM · 16:9', 'height:553px')}</div>
+    <div style="display:flex;flex-direction:column;">${camStripe()}${ph('WEBCAM · 16:9', 'height:553px')}</div>
     <div style="flex:1;display:flex;flex-direction:column;background:var(--color-text);min-height:0;">${stripe()}<div style="padding:16px 24px;font-size:24px;font-weight:800;letter-spacing:.1em;border-bottom:2px solid var(--color-neutral-800);">CHAT</div>${chatSlot('flex:1;margin:0 24px 16px;min-height:0')}</div>
     <div style="display:flex;justify-content:space-between;font-size:24px;font-weight:600;letter-spacing:.08em;color:var(--color-neutral-400);"><div>TIKTOK · IG · YOUTUBE</div><div>${esc(S.socials.handle)}</div></div></div>`);
 };
@@ -152,10 +158,10 @@ T['g-game'] = V => {
   if (!V) return `${bg('GAMEPLAY CAPTURE · PS5')}
     <div style="position:absolute;right:48px;bottom:48px;width:480px;display:flex;flex-direction:column;gap:16px;">
       ${gtaFlight()}
-      <div style="display:flex;flex-direction:column;">${stripe()}${ph('WEBCAM', 'height:270px')}${gtaCamBar()}</div></div>`;
+      <div style="display:flex;flex-direction:column;">${camStripe()}${ph('WEBCAM', 'height:270px')}${gtaCamBar()}</div></div>`;
   return `${bg('GAMEPLAY · PS5')}
     <div style="position:absolute;left:48px;right:48px;top:180px;">${gtaFlight()}</div>
-    <div style="position:absolute;left:48px;bottom:440px;width:560px;display:flex;flex-direction:column;">${stripe()}${ph('WEBCAM', 'height:315px')}${gtaCamBar()}</div>`;
+    <div style="position:absolute;left:48px;bottom:440px;width:560px;display:flex;flex-direction:column;">${camStripe()}${ph('WEBCAM', 'height:315px')}${gtaCamBar()}</div>`;
 };
 
 const gtaHold = (kicker, titleH, titleV, line) => V => {
@@ -185,8 +191,8 @@ T['c-start'] = V => fieldCard(V, `${headPair(esc(S.clubs.label), 'GAMETIMEWES', 
 T['c-game'] = V => {
   const camBar = `<div style="display:flex;align-items:center;gap:16px;background:#0d0c0c;color:var(--color-bg);padding:14px 20px;font-size:28px;font-weight:800;">${pulse()}<span>GAMETIMEWES</span><span style="margin-left:auto;font-size:20px;font-weight:600;letter-spacing:.12em;color:var(--color-accent-400);">PRO CLUBS</span></div>`;
   if (!V) return `${bg('GAMEPLAY CAPTURE · EA FC')}${ph('ALERT AREA', 'position:absolute;right:48px;top:48px;width:640px;height:150px;border:4px dashed #f3f2f2;align-items:center')}
-    <div style="position:absolute;left:48px;bottom:48px;width:480px;display:flex;flex-direction:column;">${stripe()}${ph('WEBCAM', 'height:270px')}${camBar}</div>`;
-  return `${bg('GAMEPLAY · EA FC')}<div style="position:absolute;left:48px;right:48px;top:180px;display:flex;flex-direction:column;">${stripe()}${ph('WEBCAM', 'height:553px')}${camBar}</div>`;
+    <div style="position:absolute;left:48px;bottom:48px;width:480px;display:flex;flex-direction:column;">${camStripe()}${ph('WEBCAM', 'height:270px')}${camBar}</div>`;
+  return `${bg('GAMEPLAY · EA FC')}<div style="position:absolute;left:48px;right:48px;top:180px;display:flex;flex-direction:column;">${camStripe()}${ph('WEBCAM', 'height:553px')}${camBar}</div>`;
 };
 
 T['c-half'] = V => {
@@ -240,12 +246,12 @@ T['w-live'] = V => {
       <div style="display:flex;align-items:center;gap:16px;background:var(--color-text);padding:0 28px;font-size:22px;font-weight:600;letter-spacing:.14em;">${pulse()}${esc(m.comp)}</div>
       ${scoreBlocks(m, 56, '22px 32px', true)}
       <div style="margin-left:auto;display:flex;align-items:center;font-size:24px;font-weight:600;letter-spacing:.12em;color:var(--color-neutral-400);">${esc(S.socials.handle)}</div></div>
-    <div style="display:flex;flex-direction:column;min-height:0;">${stripe()}${ph('WEBCAM', 'flex:1')}${camBar}</div>${chat}</div>`);
+    <div style="display:flex;flex-direction:column;min-height:0;">${camStripe()}${ph('WEBCAM', 'flex:1')}${camBar}</div>${chat}</div>`);
   return full(`<div style="display:flex;flex-direction:column;gap:28px;padding:180px 48px 120px;height:100%">
     <div style="display:flex;flex-direction:column;line-height:1;">
       <div style="display:flex;align-items:center;gap:16px;background:var(--color-text);padding:14px 24px;font-size:22px;font-weight:600;letter-spacing:.14em;">${pulse()}${esc(m.comp)}<span style="margin-left:auto;color:var(--color-neutral-400)">${esc(S.socials.handle)}</span></div>
       <div style="display:grid;grid-template-columns:1fr auto 1fr auto;">${scoreBlocks(m, 64, '22px 28px', true)}</div></div>
-    <div style="display:flex;flex-direction:column;">${stripe()}${ph('WEBCAM', 'height:553px')}${camBar}</div>${chat}</div>`);
+    <div style="display:flex;flex-direction:column;">${camStripe()}${ph('WEBCAM', 'height:553px')}${camBar}</div>${chat}</div>`);
 };
 
 T['w-lineups'] = V => {
@@ -331,7 +337,7 @@ function render() {
   const html = tpl ? tpl(vertical) : `<div style="position:absolute;inset:0;display:grid;place-items:center;font-size:40px;background:#0d0c0c">Unknown scene "${esc(sceneId)}"</div>`;
   if (html !== lastHtml) {
     lastHtml = html;
-    stage.innerHTML = html;
+    content.innerHTML = html;
     const slot = stage.querySelector('[data-chat]');
     if (slot) {
       if (!chatEl) { chatEl = document.createElement('div'); chatEl.className = 'chat-list'; mountChatList(chatEl, { channel: params.get('channel') || CONFIG.channel }); }
@@ -349,6 +355,8 @@ function paintTelemetry() {
   const set = (k, v) => { const el = box.querySelector(`[data-t="${k}"]`); if (el) el.textContent = v; };
   set('alt', fmt.alt(t)); set('gs', fmt.gs(t)); set('hdg', fmt.hdg(t)); set('vs', fmt.vs(t)); set('dist', fmt.dist(t)); set('ete', fmt.ete(t));
 }
+
+initTheme({ stage, ctx: { sceneId, vertical }, onChange: () => { lastHtml = ''; render(); } });
 
 ['flight', 'match', 'countdown', 'socials', 'clubs', 'gta', 'poll'].forEach(k => watch(k, v => {
   if (k === 'poll' && v.id !== S.poll?.id) { S.poll = v; loadVotes(); }

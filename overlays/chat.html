@@ -25,6 +25,8 @@
 import { CONFIG } from '../lib/config.js';
 import { params } from '../lib/state.js';
 import { mountChatList } from '../lib/chat.js';
+import { initTheme } from '../lib/theme.js';
+initTheme({ stage: null });
 document.body.classList.toggle('bare', params.get('bare') === '1');
 document.body.classList.toggle('still', params.get('motion') === '0');
 mountChatList(document.getElementById('list'), {

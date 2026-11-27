@@ -4,6 +4,7 @@ import { watchSim, fmt } from '../lib/sim.js';
 import { connectChat } from '../lib/chat.js';
 import { tokenInfo } from '../lib/twitch-events.js';
 import { playAlertSound } from '../lib/sounds.js';
+import { THEMES, resolveTheme, autoTheme } from '../themes/themes.js';
 
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const ls = { get: k => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch {} } };
@@ -13,6 +14,18 @@ const save = (path, value) => write(path, value).catch(saveErr).catch(() => fals
 const savePatch = (path, obj) => patch(path, obj).then(() => true).catch(saveErr).catch(() => false);
 const S = {};
 let sim = null, twitch = null, uid = null, signedIn = !firebaseEnabled();
+
+// ---------- overlay theme (header switch) ----------
+const fmtRange = ([a, b]) => { const f = s => new Date(`2000-${s}T12:00`).toLocaleDateString([], { month: 'short', day: 'numeric' }); return `${f(a)}–${f(b)}`; };
+$('#themeSel').innerHTML = `<option value="auto">Auto (by date)</option>` + Object.entries(THEMES).map(([id, t]) => `<option value="${id}">${t.name}${t.dates ? ' · ' + t.dates.map(fmtRange).join(', ') : ''}</option>`).join('');
+$('#themeSel').onchange = e => save('theme/active', e.target.value).then(ok => ok !== false && toast(`Overlays switched to ${THEMES[resolveTheme(e.target.value)].name}`));
+function paintTheme(active) {
+  if (document.activeElement !== $('#themeSel')) $('#themeSel').value = active || 'auto';
+  const id = resolveTheme(active);
+  $('#themeNow').textContent = `ON AIR: ${THEMES[id].name}${(!active || active === 'auto') ? ' (auto)' : ''}`;
+}
+queueMicrotask(() => watch('theme', t => paintTheme(t?.active)));
+setInterval(() => paintTheme($('#themeSel').value), 60000);
 
 // ---------- tabs ----------
 function showTab(name) {
@@ -316,14 +329,14 @@ let layout = 'h';
 function renderLinks() {
   const V = layout === 'v', base = new URL('../overlays/', location.href).href, size = V ? '1080 × 1920' : '1920 × 1080';
   const prev = $('#prevToggle').checked ? '&preview=1' : '';
-  const lay = V ? '&layout=vertical' : '';
+  const lay = (V ? '&layout=vertical' : '') + ($('#linkTheme').value ? '&theme=' + $('#linkTheme').value : '');
   const token = ls.get('gtw_twitch_token'), key = ls.get('apisports_key');
   const row = (title, sub, url, sz) => `<div class="link"><div><b>${title}</b><small>${sub} · ${sz}</small></div><input readonly value="${url}"><button class="btn-sm" data-copy="${url}">Copy</button><a href="${url}" target="_blank" rel="noopener">Open ↗</a></div>`;
   let html = '';
   SCENES.forEach(([group, list]) => { html += `<h3>${group}</h3>` + list.map(([id, name]) => row(name, id, `${base}scenes.html?scene=${id}${lay}${prev}`, size)).join(''); });
   html += '<h3>Shared</h3>';
   html += row('Alerts', token ? 'Twitch connected' : 'dashboard tests only — connect Twitch in Setup', `${base}alerts.html?x=1${lay}${prev}${token ? '#token=' + token : ''}`, size);
-  html += row('Chat box', 'Twitch chat, no login needed', `${base}chat.html`, V ? '1000 × 900' : '520 × 760');
+  html += row('Chat box', 'Twitch chat, no login needed', `${base}chat.html${$('#linkTheme').value ? '?theme=' + $('#linkTheme').value : ''}`, V ? '1000 × 900' : '520 × 760');
   html += row('Watchalong API overlay', 'follows the Watchalong API tab', `${base}watchalong.html?obs=1${lay}${key ? '#key=' + encodeURIComponent(key) : ''}`, size);
   html += row('Goal card (static)', 'w-goal preview', `${base}scenes.html?scene=w-goal${lay}${prev}`, size);
   $('#links').innerHTML = html;
@@ -331,6 +344,8 @@ function renderLinks() {
 }
 $$('#layoutSeg button').forEach(b => b.onclick = () => { layout = b.dataset.l; $$('#layoutSeg button').forEach(x => x.classList.toggle('on', x === b)); renderLinks(); });
 $('#prevToggle').onchange = renderLinks;
+$('#linkTheme').insertAdjacentHTML('beforeend', Object.entries(THEMES).map(([id, t]) => `<option value="${id}">Pin: ${t.name}</option>`).join(''));
+$('#linkTheme').onchange = renderLinks;
 renderLinks();
 
 // ---------- setup checklist + Twitch ----------

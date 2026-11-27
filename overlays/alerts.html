@@ -32,6 +32,8 @@ import { bootStage, esc } from '../lib/stage.js';
 import { connectEventSub } from '../lib/twitch-events.js';
 import { goalCard } from './cards.js';
 import { playAlertSound, speak, audioLocked, unlockAudio } from '../lib/sounds.js';
+import { initTheme } from '../lib/theme.js';
+initTheme({ stage: null }); // alert cards pick up the theme's stripes; no decoration layer
 
 bootStage();
 document.body.classList.toggle('pos-left', params.get('pos') === 'left');

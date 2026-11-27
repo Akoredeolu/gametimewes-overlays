@@ -10,12 +10,15 @@ The templates in git carry no secrets or machine-specific IDs. This script fills
   --from             an OBS collection you exported on THIS machine (Scene Collection > Export).
                      Copies webcam / capture card / mic device settings and the Aitum Vertical canvas id,
                      so devices work and the "V · …" scenes land on your vertical canvas.
+  --theme            pin every overlay in the collections to one theme (e.g. christmas) and build them as a
+                     separate set named "Gametimewes - Flight Sim (Christmas)" etc. Leave it off to follow the
+                     dashboard's theme switch, which needs no rebuild.
   --alerts-url-file  a text file holding the alerts URL from /auth/ (with #token=…). The token is written
                      only into obs/dist/, which git ignores. Never commit it.
 
 Output: obs/dist/Gametimewes - *.json → OBS > Scene Collection > Import.
 """
-import argparse, copy, glob, json, os, sys
+import argparse, copy, glob, json, os, re, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 MAIN = '6c69626f-6273-4c00-9d88-c5136d61696e'  # libobs main canvas uuid (same on every install)
@@ -23,6 +26,7 @@ MAIN = '6c69626f-6273-4c00-9d88-c5136d61696e'  # libobs main canvas uuid (same o
 ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 ap.add_argument('--from', dest='export', help='OBS collection exported on this machine')
 ap.add_argument('--alerts-url-file', help='file containing the alerts URL from /auth/')
+ap.add_argument('--theme', help='pin overlays to this theme id and build a separate themed set')
 ap.add_argument('--stinger-dir', default=os.path.join(HERE, 'stingers'))
 ap.add_argument('--out', default=os.path.join(HERE, 'dist'))
 a = ap.parse_args()
@@ -75,7 +79,20 @@ for f in sorted(glob.glob(os.path.join(HERE, 'templates', '*.json'))):
                 q = '?layout=vertical' if s['name'].endswith('(V)') or 'layout=vertical' in u else ''
                 s['settings']['url'] = base.split('?')[0] + q + ('#' + frag if frag else '')
         notes.append('alerts token')
-    out = os.path.join(a.out, os.path.basename(f))
+    name = os.path.splitext(os.path.basename(f))[0]
+    if a.theme:
+        label = a.theme.replace('-', ' ').title()
+        for s in d['sources']:
+            u = s.get('settings', {}).get('url', '')
+            if s['id'] == 'browser_source' and '/gametimewes-overlays/' in u:
+                base_u, hashsep, frag = u.partition('#')
+                base_u = re.sub(r'([?&])theme=[^&]*&?', r'\1', base_u).rstrip('?&')
+                base_u += ('&' if '?' in base_u else '?') + 'theme=' + a.theme
+                s['settings']['url'] = base_u + hashsep + frag
+        name = f'{name} ({label})'
+        d['name'] = name
+        notes.append(f'pinned to {a.theme}')
+    out = os.path.join(a.out, name + '.json')
     json.dump(d, open(out, 'w'), indent=2, ensure_ascii=False)
     print(f'{out}  ({", ".join(notes) or "templates only"})')
 print('\nImport in OBS: Scene Collection > Import, paste each path above.')

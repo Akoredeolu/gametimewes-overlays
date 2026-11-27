@@ -75,6 +75,20 @@ The web config values are public by design; the rules only let `admins` write.
 
 Every alert plays a built-in sound (generated in the browser, no files or licences): chime for follows, arpeggio for subs, coin blips for cheers, drum roll + stadium horn for raids, horn + crowd roar for GOAL. In the dashboard (**Countdown · Poll · Alerts → Alert audio**) set the master volume, mute, swap any alert to **Silent** or **Custom…** (a URL, or a clip you add to `sounds/` such as `sounds/goal.mp3`), and optionally read cheer/resub/redeem messages aloud. In OBS tick **Control audio via OBS** on the alerts source so it gets its own mixer fader.
 
+## Themes (Christmas, New Year, collabs…)
+
+Every overlay follows **one theme switch** in the dashboard header — no OBS changes. Pick a theme, or **Auto (by date)**, which uses each theme's date window (Christmas: 1–26 Dec) and falls back to Rossoneri.
+
+- Pin a single OBS source: add `&theme=christmas` to its URL (or pick "Pin" under **OBS links → Theme in links**).
+- Separate themed scene collections: `python3 obs/build.py --from <export> --theme christmas` builds "Gametimewes - Flight Sim (Christmas)" etc. with every overlay pinned.
+- Preview: the gallery page has theme buttons; any overlay URL accepts `&theme=<id>`; `&decor=0` hides snow/lights/trees.
+
+**Add a theme** (New Year, 4th of July, birthday week, a collab):
+1. Create `themes/<id>/theme.css` — override `--stripe`, accent colours, add decorations to `.stripe`, `.cam-stripe` (webcam frames), `.scorebug` etc., all under `html[data-theme="<id>"]`.
+2. Optional `themes/<id>/theme.js` — `export function mount(stage, { sceneId, vertical })` adds layers (snow, confetti, logos) and returns a cleanup.
+3. Register it in `themes/themes.js` with a name, optional `dates: [['12-31','01-07']]` for Auto, and optional `copy` to change wording.
+`themes/christmas/` is the worked example (ported from `design/holiday.js`).
+
 ## OBS
 
 The full OBS setup (3 scene collections with horizontal + vertical scenes, stinger, hotkeys, audio routing) lives in [`obs/`](obs/README.md): `python3 obs/build.py --from <your export>` then **Scene Collection → Import**.

@@ -1,0 +1,42 @@
+/* Christmas — Rossoneri with candy-cane stripes, snow caps, Santa hats, lights, snow and trees.
+   Ported from the Claude Design "holiday.js" layer. Decorations (lights, snow, trees) live in theme.js. */
+html[data-theme="christmas"] { --xmas-hat: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2080%2070%22%3E%3Cpolygon%20points%3D%2210%2C52%2036%2C8%2062%2C16%2070%2C52%22%20fill%3D%22%23ec3013%22%2F%3E%3Cpolygon%20points%3D%2236%2C8%2062%2C16%2050%2C30%22%20fill%3D%22%23ae1800%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%2250%22%20width%3D%2276%22%20height%3D%2216%22%20fill%3D%22%23f3f2f2%22%2F%3E%3Crect%20x%3D%2255%22%20y%3D%229%22%20width%3D%2215%22%20height%3D%2215%22%20fill%3D%22%23f3f2f2%22%20transform%3D%22rotate%2845%2062.5%2016.5%29%22%2F%3E%3C%2Fsvg%3E"); --xmas-cap: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%2012%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20d%3D%22M0%2012V6h20V3h30v4h25V2h35v5h20V4h40v3h30V5h40v7z%22%20fill%3D%22%23f3f2f2%22%2F%3E%3C%2Fsvg%3E"); }
+html[data-theme="christmas"] body { --stripe: repeating-linear-gradient(135deg,#ec3013 0 15px,#f3f2f2 15px 21.213px,#0d0c0c 21.213px 36.213px,#f3f2f2 36.213px 42.426px); }
+html[data-theme="christmas"] body.neutral { --stripe: repeating-linear-gradient(135deg,#ec3013 0 15px,#f3f2f2 15px 21.213px,#ec3013 21.213px 36.213px,#f3f2f2 36.213px 42.426px); }
+
+/* every brand stripe → candy cane with a snow cap on top */
+html[data-theme="christmas"] .stripe { position: relative; background: var(--stripe); background-size: 60px 60px; overflow: visible; }
+html[data-theme="christmas"] body.neutral .stripe { animation: gw-drift 3s linear infinite; }
+html[data-theme="christmas"] .stripe::after { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: 12px; background: var(--xmas-cap) repeat-x left bottom/240px 12px; pointer-events: none; }
+html[data-theme="christmas"] body.still .stripe { animation: none; }
+
+/* Santa hat on the webcam frames */
+html[data-theme="christmas"] .cam-stripe::before { content: ""; position: absolute; left: -34px; top: -62px; width: 96px; height: 84px; background: var(--xmas-hat) no-repeat center/contain; transform: rotate(-16deg); z-index: 3; pointer-events: none; }
+
+/* alerts + chat box: the card stripes above pick up the candy cane automatically */
+
+/* ---- watchalong API overlay (overlays/watchalong.html) ---- */
+html[data-theme="christmas"] .scorebug::before, html[data-theme="christmas"] .slipcard::before, html[data-theme="christmas"] .cam::before { background-size: 60px 60px; }
+html[data-theme="christmas"] body.neutral:not(.still) .scorebug::before, html[data-theme="christmas"] body.neutral:not(.still) .slipcard::before, html[data-theme="christmas"] body.neutral:not(.still) .cam::before { animation: drift 3s linear infinite; }
+html[data-theme="christmas"] .scorebug::after { content: ""; position: absolute; left: -24px; top: -32px; width: 68px; height: 60px; background: var(--xmas-hat) no-repeat center/contain; transform: rotate(-16deg); }
+html[data-theme="christmas"] .cam::after { content: ""; position: absolute; left: -40px; top: -76px; width: 96px; height: 84px; background: var(--xmas-hat) no-repeat center/contain; transform: rotate(-16deg); }
+html[data-theme="christmas"] .lu-head { position: relative; }
+html[data-theme="christmas"] .lu-head::after, html[data-theme="christmas"] .slipcard::after { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: 12px; background: var(--xmas-cap) repeat-x left bottom/240px 12px; }
+html[data-theme="christmas"] .lineup.away .lu-head::after { bottom: calc(100% + 6px); }
+html[data-theme="christmas"] #goalBanner { border-image: repeating-linear-gradient(135deg,#ec3013 0 15px,#f3f2f2 15px 21.213px,#0d0c0c 21.213px 36.213px,#f3f2f2 36.213px 42.426px) 14; border-image-slice: 14 0 0 0; border-image-width: 14px 0 0 0; }
+html[data-theme="christmas"] body.neutral #goalBanner { border-image-source: repeating-linear-gradient(135deg,#ec3013 0 15px,#f3f2f2 15px 21.213px,#ec3013 21.213px 36.213px,#f3f2f2 36.213px 42.426px); }
+
+/* ---- decoration layer (theme.js) ---- */
+@keyframes gwx-fall { to { transform: translate(var(--dx), var(--fall, 1160px)) rotate(var(--r)); } }
+@keyframes gwx-twinkle { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+.gwx-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 50; }
+.gwx-lights { position: absolute; left: 0; right: 0; top: 0; height: 44px; pointer-events: none; }
+.gwx-wire { position: absolute; left: 0; right: 0; top: 9px; height: 2px; background: #444141; }
+.gwx-b { position: absolute; top: 10px; width: 6px; height: 8px; background: #444141; animation: gwx-twinkle 2s ease-in-out infinite; }
+.gwx-b::after { content: ""; position: absolute; left: -5px; top: 11px; width: 16px; height: 16px; background: var(--c); transform: rotate(45deg); box-shadow: 0 0 14px var(--c); }
+.gwx-f { position: absolute; top: -40px; left: 0; color: #f3f2f2; font-style: normal; line-height: 1; animation: gwx-fall linear infinite; will-change: transform; }
+.gwx-f.sq { width: var(--s); height: var(--s); background: #f3f2f2; }
+.gwx-still .gwx-f { animation: none; top: var(--y); }
+.gwx-still .gwx-b, .gwx-still .gwx-o { animation: none; }
+.gwx-tree { position: absolute; pointer-events: none; z-index: 40; }
+.gwx-o { animation: gwx-twinkle 2.4s ease-in-out infinite; }
